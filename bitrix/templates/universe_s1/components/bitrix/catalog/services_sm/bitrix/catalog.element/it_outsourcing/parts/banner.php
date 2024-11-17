@@ -137,7 +137,7 @@ if (!$bBannerWide) { ?>
 														<?= $sButtonText ?>
 													</a>-->
 													
-													
+											
  	<?$APPLICATION->IncludeComponent(
 	"intec.universe:main.form",
 	"zakaz_uslug",
@@ -160,6 +160,7 @@ if (!$bBannerWide) { ?>
 		"VIEW" => "left"
 	)
 );?>  
+
 												<? endif; ?>
                                             </div>
                                             <div class="clearfix"></div>

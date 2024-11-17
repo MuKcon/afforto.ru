@@ -68,51 +68,21 @@ $GLOBALS['_content_bottom'] = $arResult['PROPERTIES']['CONTENT_BOTTOM']['VALUE']
 ?>
 <div class="service landing ">
 	<?php include("parts/banner.php") ?>
-	<div class="poluchit_scidku_wrapp">
-		<?
-		$APPLICATION->IncludeComponent(
-	"intec.universe:main.form", 
-	"template.1", 
-	array(
-		"CACHE_TIME" => "36000000",
-		"CACHE_TYPE" => "A",
-		"COMPOSITE_FRAME_MODE" => "A",
-		"COMPOSITE_FRAME_TYPE" => "AUTO",
-		"CONSENT" => "/company/consent/",
-		"TITLE" => "Скидка 50% на обслуживание компьютерной техники",
-		"DESCRIPTION_SHOW" => "Y",
-		"DESCRIPTION_TEXT" => "Нажмите на кнопку \"Получить скидку\", заполните форму и Вы получите первый месяц поддержки по договору абонентского обслуживания компьютерной техники со скидкой 50%",
-		"BUTTON_TEXT" => "Получить скидку",
-		"THEME" => "dark",
-		"VIEW" => "left",
-		"BACKGROUND_COLOR" => "#f8f9fb",
-		"BACKGROUND_IMAGE_USE" => "N",
-		"BACKGROUND_IMAGE_PATH" => "/upload/img/bg_form1.jpg",
-		"BACKGROUND_IMAGE_HORIZONTAL" => "left",
-		"BACKGROUND_IMAGE_VERTICAL" => "top",
-		"BACKGROUND_IMAGE_SIZE" => "cover",
-		"ID" => "1",
-		"NAME" => "Хочу тестовый период со скидкой 50%",
-		"TEMPLATE" => ".default",
-		"COMPONENT_TEMPLATE" => "template.1",
-		"SETTINGS_USE" => "N",
-		"LAZYLOAD_USE" => "N"
-	),
-	false
-);?>
-	</div>
-<? if($arResult['PROPERTIES']['CONTENT_BOTTOM']['VALUE'] != "Y"): ?>
+	<? if($arResult['PROPERTIES']['CONTENT_BOTTOM']['VALUE'] != "Y"): ?>
 		<div class="intec-content">
 			<div class="intec-content-wrapper">
 				<?php if ($bDetailDescriptionShow && $sBannerType < 4) {
 					include('parts/detail-text.php');
 				}
-?></div></div><?
-				if($bFeedbackShow) {
+				?>
+			</div>
+		</div>
+		<? if($bFeedbackShow) {
 					include("parts/feedback.php");
 				}
-?><div class="intec-content">
-<div class="intec-content-wrapper"><?
+		?>
+		<div class="intec-content">
+		<div class="intec-content-wrapper"><?
 				if ($bGalleryShow && $bGalleryValue) {
 					include('parts/gallery.php');
 				}
