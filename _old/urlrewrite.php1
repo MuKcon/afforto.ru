@@ -1,0 +1,99 @@
+<?php
+$arUrlRewrite=array (
+  1 => 
+  array (
+    'CONDITION' => '#^/bitrix/services/ymarket/#',
+    'RULE' => '',
+    'ID' => '',
+    'PATH' => '/bitrix/services/ymarket/index.php',
+    'SORT' => 100,
+  ),
+  33 => 
+  array (
+    'CONDITION' => '#^/company/articles/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/company/articles/index.php',
+    'SORT' => 100,
+  ),
+  63 => 
+  array (
+    'CONDITION' => '#^/personal/profile/#',
+    'RULE' => '',
+    'ID' => 'bitrix:sale.personal.section',
+    'PATH' => '/personal/profile/index.php',
+    'SORT' => 100,
+  ),
+  60 => 
+  array (
+    'CONDITION' => '#^/company/clients/#',
+    'RULE' => '',
+    'ID' => 'bitrix:catalog',
+    'PATH' => '/company/clients/index.php',
+    'SORT' => 100,
+  ),
+  3 => 
+  array (
+    'CONDITION' => '#^/company/news/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/company/news/index.php',
+    'SORT' => 100,
+  ),
+  59 => 
+  array (
+    'CONDITION' => '#^/company/blog/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/company/blog/index.php',
+    'SORT' => 100,
+  ),
+  61 => 
+  array (
+    'CONDITION' => '#^/help/brands/#',
+    'RULE' => '',
+    'ID' => 'bitrix:catalog',
+    'PATH' => '/help/brands/index.php',
+    'SORT' => 100,
+  ),
+  65 => 
+  array (
+    'CONDITION' => '#^/services/#',
+    'RULE' => '',
+    'ID' => 'bitrix:catalog',
+    'PATH' => '/services/index.php',
+    'SORT' => 100,
+  ),
+  66 => 
+  array (
+    'CONDITION' => '#^/catalog/#',
+    'RULE' => '',
+    'ID' => 'bitrix:catalog',
+    'PATH' => '/catalog/index.php',
+    'SORT' => 100,
+  ),
+  58 => 
+  array (
+    'CONDITION' => '#^/shares/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/shares/index.php',
+    'SORT' => 100,
+  ),
+  7 => 
+  array (
+    'CONDITION' => '#^/photo/#',
+    'RULE' => '',
+    'ID' => 'bitrix:photo',
+    'PATH' => '/photo/index.php',
+    'SORT' => 100,
+  ),
+  0 => 
+  array (
+    'CONDITION' => '#^/rest/#',
+    'RULE' => '',
+    'ID' => NULL,
+    'PATH' => '/bitrix/services/rest/index.php',
+    'SORT' => 100,
+  ),
+);

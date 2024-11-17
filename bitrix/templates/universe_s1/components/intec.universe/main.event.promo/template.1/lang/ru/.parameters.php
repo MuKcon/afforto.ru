@@ -1,0 +1,32 @@
+<?php
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_PICTURE_SOURCE'] = 'Источник доп. картинки';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_PROPERTY_BUTTON_TEXT'] = 'Свойство "Текст кнопки"';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_PROPERTY_BUTTON_LINK'] = 'Свойство "Ссылка"';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_PROPERTY_BACKGROUND'] = 'Свойство "Фоновое изображение"';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_TEXT_POSITION'] = 'Расположение текста блока';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_THEME'] = 'Цветовая схема';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_PICTURE_SHOW'] = 'Показывать доп. изображение';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_SHOW'] = 'Показывать кнопку';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_TEXT'] = 'Текст кнопки';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_POSITION'] = 'Расположение кнопки';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_LINK'] = 'Ссылка кнопки';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_ANCHOR'] = 'ID контейнера (#)';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_MODE'] = 'Режим кнопки';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BACKGROUND_USE'] = 'Использовать фоновое изображение';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BACKGROUND_PADDING'] = 'Внутренние откступы блока сверху и снизу от контента (рх)';
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_POSITION_LEFT'] = 'Слева';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_POSITION_CENTER'] = 'По центру';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_POSITION_RIGHT'] = 'Справа';
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_SOURCE_PREVIEW'] = 'Картинка для анонса';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_SOURCE_DETAIL'] = 'Детальная картинка';
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_THEME_LIGHT'] = 'Светлая';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_THEME_DARK'] = 'Темная';
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_MODE_LINK'] = 'Ссылка';
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_MODE_ANCHOR'] = 'Якорь';
+
+$MESS['C_MAIN_EVENT_PROMO_TEMP1_BUTTON_TEXT_DEFAULT'] = 'Принять участие';

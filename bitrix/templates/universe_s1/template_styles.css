@@ -1,0 +1,84 @@
+@font-face{
+font-display: swap;
+}
+
+.requisites{
+	width: 40%;
+	float: left;
+}
+form.contact_form_obratnaiasviaz{
+	width: 60%;
+	float: right;
+}
+.requisites, form.contact_form_obratnaiasviaz{
+    position: relative;
+    min-height: 1px;
+    width: 49%;
+}
+.contacts-form-wrap {
+	display: block;
+}
+.widget.c-widget.c-widget-contact-1{
+	clear: both;
+}
+.req1 {
+    float: left;
+    clear: both;
+    width: 182px;
+    padding: 0 5px 0 0;
+    font-weight: 700;
+}
+.req2 {
+    overflow: hidden;
+    margin: 0 0 10px;
+}
+@media(max-width: 768px){
+	.contacts-form-wrap {
+		display: flex;
+	    flex-flow: wrap;
+	}
+	.requisites, form.contact_form_obratnaiasviaz{
+	    width: 100%
+	}
+	form.contact_form_obratnaiasviaz{
+	    margin-top: 30px;
+	}
+	.requisites {
+	    order: 1;
+	}
+	.contacts-form-wrap > div:first-child{
+		order: 2;
+	}
+	.widget.c-widget.c-widget-contact-1{
+		order: 3;
+	}
+}
+@media screen and (min-width:992px){
+	.contacts-form .contacts-form-fields .contacts-form-field.contacts-form-field-textarea textarea{min-height:228px;}
+}
+.glyph-icon-telega:before{font-family: 'Font Awesome 5 Brands';content: "\f2c6";}
+.glyph-icon-youtube:before{font-family: 'Font Awesome 5 Brands';content: "\f167";}
+.glyph-icon-zen:before{font-family: 'Font Awesome 5 Brands';content: "\f413";}
+.c-widget.c-widget-contact-1 .widget-block-wrapper-2{padding:0 10px;}
+.menu-item-text {text-transform: capitalize !important;}
+
+.intec-button-cl-common{
+color: white;
+    background-color: #303481;
+    border-color: #303481;
+    display: inline-block;
+    padding: 7px 29px;
+    border-radius: 3px;
+}
+.pull-right{
+float: right !important;
+}
+.pull-left{
+float: left !important;
+}
+
+
+.widget.c-widget.c-widget-contact-1[data-block-show=true][data-block-view=left] .widget-block-wrapper {
+margin: 0;
+padding: 0;
+}

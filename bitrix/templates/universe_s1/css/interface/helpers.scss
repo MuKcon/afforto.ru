@@ -1,0 +1,19 @@
+$class: 'intec-ui' !default;
+
+&-clear,
+&-clearfix {
+  clear: both;
+}
+
+&-clearfix {
+  &:before {
+    display: table;
+    content: "";
+  }
+
+  &:after {
+    display: table;
+    content: "";
+    clear: both;
+  }
+}

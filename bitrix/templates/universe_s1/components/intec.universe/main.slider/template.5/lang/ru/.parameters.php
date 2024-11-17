@@ -1,0 +1,30 @@
+<?php
+
+$MESS['C_SLIDER_TEMP2_BLOCKS_IBLOCK_TYPE'] = 'Тип инфоблока блоков';
+$MESS['C_SLIDER_TEMP2_BLOCKS_IBLOCK_ID'] = 'Инфоблок блоков';
+$MESS['C_SLIDER_TEMP2_BLOCKS_COUNT'] = 'Количество блоков';
+$MESS['C_SLIDER_TEMP2_PROPERTY_HEADER_COLOR'] = 'Свойство "Цвет заголовка"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_DESCRIPTION_COLOR'] = 'Свойство "Цвет описания"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_LINK'] = 'Свойство "Ссылка"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_LINK_BLANK'] = 'Свойство "Открывать ссылку в новой вкладке"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_BUTTON_SHOW'] = 'Свойство "Показывать кнопку"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_BUTTON_TEXT'] = 'Свойство "Текст кнопки"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_BUTTON_TEXT_COLOR'] = 'Свойство "Цвет текста кнопки"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_BUTTON_COLOR'] = 'Свойство "Цвет кнопки"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_BANNER_COLOR'] = 'Свойство "Цвет баннера"';
+$MESS['C_SLIDER_TEMP2_PROPERTY_VIDEO_URL'] = 'Свойство "Ссылка на видео"';
+$MESS['C_SLIDER_TEMP2_BLOCKS_PROPERTY_LINK'] = 'Свойство блока "Ссылка"';
+$MESS['C_SLIDER_TEMP2_BLOCKS_PROPERTY_LINK_BLANK'] = 'Свойство блока "Открывать ссылку в новом окне"';
+$MESS['C_SLIDER_TEMP2_HEIGHT'] = 'Высота баннера';
+$MESS['C_SLIDER_TEMP2_WIDE'] = 'Широкий баннер';
+$MESS['C_SLIDER_TEMP2_VIDEO_SHADOW_USE'] = 'Использовать затемнение видео';
+$MESS['C_SLIDER_TEMP2_VIDEO_SHADOW_COLOR'] = 'Цвет блока для затемнения видео';
+$MESS['C_SLIDER_TEMP2_VIDEO_SHADOW_COLOR_CUSTOM'] = 'Ваш цвет блока для затемнения видео';
+$MESS['C_SLIDER_TEMP2_VIDEO_SHADOW_OPACITY'] = 'Прозрачность блока для затемнения видео (%)';
+$MESS['C_SLIDER_TEMP2_SLIDER_DOTS'] = 'Отображать навигационные точки';
+$MESS['C_SLIDER_TEMP2_SLIDER_NAV'] = 'Отображать навигационные стрелки';
+$MESS['C_SLIDER_TEMP2_SLIDER_LOOP'] = 'Зациклить прокрутку слайдов';
+$MESS['C_SLIDER_TEMP2_SLIDER_SPEED'] = 'Скорость анимации переличтывания слайдов (мс)';
+$MESS['C_SLIDER_TEMP2_SLIDER_AUTO_USE'] = 'Использовать автопрокрутку слайдов';
+$MESS['C_SLIDER_TEMP2_SLIDER_AUTO_TIME'] = 'Время задержки перед сменой слайдов (мс)';
+$MESS['C_SLIDER_TEMP2_SLIDER_AUTO_PAUSE'] = 'Останавливать прокрутку при наведении мыши на баннер';

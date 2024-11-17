@@ -1,0 +1,134 @@
+.c-reviews.c-reviews-template-6 .widget-header + .widget-content {
+  margin-top: 25px;
+}
+.c-reviews.c-reviews-template-6 .widget-content-wrap {
+  margin-left: -20px;
+  margin-right: -20px;
+}
+.c-reviews.c-reviews-template-6 .widget-element {
+  position: relative;
+  height: 100%;
+  margin-left: 60px;
+  padding: 20px 20px 20px 95px;
+  border: 1px solid #f1f1f1;
+  background-color: #FFF;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+.c-reviews.c-reviews-template-6 .widget-element:hover {
+  -webkit-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.2);
+}
+.c-reviews.c-reviews-template-6 .widget-element-wrap {
+  padding: 0 20px 20px 20px;
+}
+.c-reviews.c-reviews-template-6 .widget-element-picture {
+  width: 120px;
+  height: 120px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+.c-reviews.c-reviews-template-6 .widget-element-picture-wrap {
+  position: absolute;
+  top: 30px;
+  left: -60px;
+}
+.c-reviews.c-reviews-template-6 .widget-element-text {
+  min-height: 140px;
+}
+.c-reviews.c-reviews-template-6 .widget-element-name {
+  font-size: 14px;
+  line-height: 21px;
+  color: #515151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.c-reviews.c-reviews-template-6 .widget-element-position {
+  font-size: 12px;
+  line-height: 18px;
+  color: #bcbcbc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 18px;
+}
+.c-reviews.c-reviews-template-6 .widget-element-delimiter {
+  width: 30px;
+  height: 1px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+.c-reviews.c-reviews-template-6 .widget-element-content {
+  font-size: 14px;
+  line-height: 21px;
+  color: #606060;
+}
+.c-reviews.c-reviews-template-6 .widget-footer {
+  padding-top: 10px;
+}
+.c-reviews.c-reviews-template-6 .widget-footer-all {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 25px;
+  text-decoration: none;
+  padding: 7px 12px;
+  border: 1px solid;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+.c-reviews.c-reviews-template-6 .widget-footer-all:hover {
+  color: #FFF;
+}
+@media all and (max-width: 720px) {
+  .c-reviews.c-reviews-template-6 .widget-element-content {
+    font-size: 13px;
+    line-height: 18px;
+  }
+}
+@media all and (max-width: 500px) {
+  .c-reviews.c-reviews-template-6 .widget-element {
+    padding: 60px 20px 20px 20px;
+    margin-left: 0;
+  }
+  .c-reviews.c-reviews-template-6 .widget-element-wrap {
+    padding-top: 40px;
+  }
+  .c-reviews.c-reviews-template-6 .widget-element-picture {
+    width: 80px;
+    height: 80px;
+  }
+  .c-reviews.c-reviews-template-6 .widget-element-picture-wrap {
+    top: -40px;
+    left: 20px;
+  }
+  .c-reviews.c-reviews-template-6 .widget-element-position {
+    height: initial;
+  }
+  .c-reviews.c-reviews-template-6 .widget-element-text {
+    min-height: initial;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

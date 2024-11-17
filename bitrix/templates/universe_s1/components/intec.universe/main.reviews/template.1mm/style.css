@@ -1,0 +1,221 @@
+@keyframes animate-arrow {
+    from {
+        transform: initial;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    to {
+        transform: initial;
+    }
+}
+.c-reviews.c-reviews-template-1 .owl-carousel .intec-grid-item-1,
+.c-reviews.c-reviews-template-1 .owl-carousel .intec-grid-item-2 {
+    width: 100%;
+}
+.c-reviews.c-reviews-template-1 .widget-header + .widget-content {
+    margin-top: 30px;
+}
+.c-reviews.c-reviews-template-1 .widget-content {
+    font-size: 0;
+    text-align: left;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+.c-reviews.c-reviews-template-1 .widget-content.owl-carousel {
+    margin-left: 0;
+    margin-right: 0;
+}
+.c-reviews.c-reviews-template-1 .widget-element-wrap {
+    padding: 10px;
+    margin-bottom: 25px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.c-reviews.c-reviews-template-1 .widget-element {
+    position: relative;
+}
+
+.c-reviews.c-reviews-template-1 .widget-element-video-wrap {
+    float: left;
+}
+.c-reviews.c-reviews-template-1 .widget-element-picture,
+.c-reviews.c-reviews-template-1 .widget-element-video {
+    float: left;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    font-size: 0;
+    text-align: center;
+    margin-right: 55px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    transition: 0.4s;
+}
+.c-reviews.c-reviews-template-1 .widget-element-video::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+}
+.c-reviews.c-reviews-template-1 .widget-element-video-icon {
+    display: inline-block;
+    width: 75px;
+    height: 75px;
+    fill: #FFF;
+    vertical-align: middle;
+}
+.c-reviews.c-reviews-template-1 .intec-grid-item-1 .widget-element-picture,
+.c-reviews.c-reviews-template-1 .intec-grid-item-1 .widget-element-video {
+    width: 265px;
+    height: 178px;
+    cursor: pointer;
+}
+.c-reviews.c-reviews-template-1 .intec-grid-item-2 .widget-element-picture,
+.c-reviews.c-reviews-template-1 .intec-grid-item-2 .widget-element-video {
+    width: 178px;
+    height: 178px;
+    cursor: pointer;
+}
+.c-reviews.c-reviews-template-1 .widget-element:hover .widget-element-picture,
+.c-reviews.c-reviews-template-1 .widget-element:hover .widget-element-video {
+    -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+}
+.c-reviews.c-reviews-template-1 .widget-element:hover .widget-element-video-icon {
+    animation-name: animate-arrow;
+    animation-duration: 1.8s;
+    animation-iteration-count: infinite;
+}
+.c-reviews.c-reviews-template-1 .widget-element-text {
+    padding: 10px 0;
+}
+.c-reviews.c-reviews-template-1 .widget-element-name {
+    font-size: 15px;
+    line-height: 15px;
+    height: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.c-reviews.c-reviews-template-1 .widget-element-position {
+    font-size: 12px;
+    line-height: 12px;
+    height: 12px;
+    margin-top: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.c-reviews.c-reviews-template-1 .widget-element-description {
+    font-size: 15px;
+    line-height: 24px;
+    color: #444444;
+    height: 96px;
+    margin-top: 25px;
+    overflow: hidden;
+}
+.c-reviews.c-reviews-template-1 .intec-grid-item-2 .widget-element-description {
+    padding-right: 50px;
+}
+
+.c-reviews.c-reviews-template-1 .widget-footer {
+    font-size: 0;
+    margin-top: 25px;
+}
+.c-reviews.c-reviews-template-1 .widget-footer-all {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 25px;
+    text-decoration: none;
+    padding: 7px 12px;
+    border: 1px solid;
+    transition: 0.4s;
+}
+.c-reviews.c-reviews-template-1 .widget-footer-all:hover {
+    color: #FFF;
+}
+
+.c-reviews.c-reviews-template-1 .owl-dots {
+    text-align: center;
+    font-size: 0;
+    padding-bottom: 20px;
+}
+.c-reviews.c-reviews-template-1 .owl-dots .owl-dot {
+    display: inline-block;
+    margin: 0 10px;
+}
+.c-reviews.c-reviews-template-1 .owl-dots .owl-dot span {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border:2px solid #000;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    transition: 0.4s;
+}
+.c-reviews.c-reviews-template-1 .owl-dots .owl-dot.active span {
+    background-color: #000;
+}
+
+@media all and (max-width: 1000px) {
+    .c-reviews.c-reviews-template-1 .widget-element-wrap.intec-grid-item-2 {
+        margin-bottom: 25px;
+    }
+    .c-reviews.c-reviews-template-1 .intec-grid-item-1 .widget-element-picture,
+    .c-reviews.c-reviews-template-1 .intec-grid-item-1 .widget-element-video {
+        width: 178px;
+    }
+    .c-reviews.c-reviews-template-1 .intec-grid-item-2 .widget-element-description {
+        padding-right: 0;
+    }
+}
+@media all and (max-width: 600px) {
+    .c-reviews.c-reviews-template-1 .widget-element-wrap:last-child {
+        margin-bottom: 0;
+    }
+    .c-reviews.c-reviews-template-1 .widget-element-picture,
+    .c-reviews.c-reviews-template-1 .widget-element-video,
+    .c-reviews.c-reviews-template-1 .widget-element-video-wrap {
+        float: none;
+        margin: auto;
+    }
+    .c-reviews.c-reviews-template-1 .widget-element-text {
+        text-align: center;
+    }
+    .c-reviews.c-reviews-template-1 .widget-element-name {
+        white-space: normal;
+        height: initial;
+        line-height: 20px;
+    }
+    .c-reviews.c-reviews-template-1 .widget-element-position {
+        white-space: normal;
+        height: initial;
+        line-height: 20px;
+    }
+    .c-reviews.c-reviews-template-1 .widget-element-description {
+        height: 120px;
+    }
+    .c-reviews.c-reviews-template-1 .owl-dots {
+        padding-top: 20px;
+    }
+}

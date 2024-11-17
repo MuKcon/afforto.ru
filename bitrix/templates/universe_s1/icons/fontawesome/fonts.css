@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: normal;
+  src: url("./fontawesome.brands.eot");
+  src: url("./fontawesome.brands.eot?#iefix") format("embedded-opentype"), url("./fontawesome.brands.woff2") format("woff2"), url("./fontawesome.brands.woff") format("woff"), url("./fontawesome.brands.ttf") format("truetype"), url("./fontawesome.brands.svg#fontawesome") format("svg"); }

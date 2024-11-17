@@ -1,0 +1,20 @@
+.c-header.c-header-template-1 .widget-banner .widget-banner-5 {
+  display: block;
+}
+.c-header.c-header-template-1 .widget-banner .widget-banner-5[data-wide=false] {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+@media all and (max-width: 1000px) {
+  .c-header.c-header-template-1 .widget-banner .widget-banner-5[data-wide=false] {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+.c-header.c-header-template-1 .widget-banner .widget-element {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+/*# sourceMappingURL=style.css.map */

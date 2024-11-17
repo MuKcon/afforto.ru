@@ -1,0 +1,38 @@
+.widget .widget-header .widget-title.align-left,
+.widget .widget-header .widget-description.align-left,
+.widget .widget-footer.align-left {
+    text-align: left;
+}
+.widget .widget-header .widget-title.align-center,
+.widget .widget-header .widget-description.align-center,
+.widget .widget-footer.align-center {
+    text-align: center;
+}
+.widget .widget-header .widget-title.align-right,
+.widget .widget-header .widget-description.align-right,
+.widget .widget-footer.align-right {
+    text-align: right;
+}
+.widget .widget-header .widget-title {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.3;
+    color: #2c2c2d;
+    margin-bottom: 5px;
+}
+.widget .widget-header .widget-description {
+    font-size: 12px;
+    line-height: 17px;
+    color: #626262;
+    margin-top: 5px;
+}
+@media all and (max-width: 720px) {
+    .widget .widget-header .widget-title {
+        font-size: 22px;
+    }
+}
+@media all and (max-width: 500px) {
+    .widget .widget-header .widget-title {
+        font-size: 18px;
+    }
+}

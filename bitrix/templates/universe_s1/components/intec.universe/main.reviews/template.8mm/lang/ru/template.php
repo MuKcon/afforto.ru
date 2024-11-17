@@ -1,0 +1,4 @@
+<?php
+
+$MESS['C_REVIEWS_TEMP8_SERVICE_TEXT'] = 'Услуга:';
+$MESS['C_REVIEWS_TEMP8_PROJECT_TEXT'] = 'Проект:';

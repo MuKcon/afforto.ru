@@ -1,0 +1,117 @@
+.akcii-slider .widget-shares .widget-shares-view.widget-shares-view-default .widget-shares-item,
+.akcii-slider .widget-shares .widget-shares-view.widget-shares-view-default .widget-shares-item.four {
+  width: 100%;
+}
+.akcii-slider .owl-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 20px);
+  display: block;
+  font-size: 14px;
+  line-height: 1.42857143;
+  font-weight: normal;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  word-spacing: normal;
+  letter-spacing: normal;
+  white-space: normal;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.akcii-slider .owl-nav button[type="button"] {
+  font-size: 9px;
+  line-height: 1;
+  color: #808080;
+  width: 40px;
+  height: 40px;
+  margin-top: -24px;
+  background: #fff;
+  border: 1px solid #E8E8E8;
+  cursor: pointer;
+  outline: none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-transition-duration: 0.35s;
+  -moz-transition-duration: 0.35s;
+  -ms-transition-duration: 0.35s;
+  -o-transition-duration: 0.35s;
+  transition-duration: 0.35s;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -ms-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  position: absolute;
+  z-index: 1;
+}
+.akcii-slider .owl-nav button svg path {
+  stroke: #808080;
+  -webkit-transition-duration: 0.35s;
+  -moz-transition-duration: 0.35s;
+  -ms-transition-duration: 0.35s;
+  -o-transition-duration: 0.35s;
+  transition-duration: 0.35s;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -ms-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+}
+.akcii-slider .widget-shares-view-wrapper {
+  padding-left: 120px;
+  padding-right: 120px;
+  margin: 0 !important;
+}
+.akcii-slider .owl-nav button.owl-prev {
+  left: 0;
+}
+.akcii-slider .owl-nav button.owl-next {
+  right: 0;
+}
+
+.akcii-slider .owl-nav button:hover svg path {
+  stroke: #FFF;
+}
+.akcii-slider .owl-nav button:hover {
+  background-color: #303481 !important;
+  fill: #303481 !important;
+  border-color: #303481 !important;
+}
+.container-3517>div {
+  padding-bottom: 20px;
+}
+@media screen and (max-width:1290px) {
+  .service-caption {
+    padding-left: 20px;
+  }
+  .container-3517>div {
+    padding: 0 20px 20px;
+  }
+}
+@media screen and (max-width:1024px) {
+  .akcii-slider .widget-shares-view-wrapper {
+    padding-left: 55px;
+    padding-right: 55px;
+  }
+}
+@media screen and (max-width:980px) {
+  .akcii-slider .widget-shares .widget-shares-view.widget-shares-view-default .widget-shares-item, .akcii-slider .widget-shares .widget-shares-view.widget-shares-view-default .widget-shares-item.four {
+    width: 100% !important;
+  }
+}
+@media screen and (max-width:400px) {
+  .akcii-slider .widget-shares-view-wrapper {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+  .akcii-slider .owl-nav button[type="button"] {
+    width: 30px;
+    height: 30px;
+  }
+}

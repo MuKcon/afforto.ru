@@ -1,0 +1,5 @@
+<?php
+
+$MESS['C_SERV_TEMP2_BUTTON_TEXT_DEFAULT_ORDER'] = 'ЗАКАЗАТЬ';
+$MESS['C_SERV_TEMP2_BUTTON_TEXT_DEFAULT_DETAIL'] = 'ПОДРОБНЕЕ';
+$MESS['C_SERV_TEMP2_FORM_TITLE'] = 'Заказ услуги';

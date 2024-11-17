@@ -1,0 +1,3 @@
+<?php
+
+$MESS['C_SLIDER_TEMP2_BUTTON_TEXT_DEFAULT'] = 'Подробнее';

@@ -1,0 +1,3 @@
+<?php
+
+$MESS['YANDEX_DELIVERY_T_ADMIN_GRID_LIST_FILTER_ANY'] = '(все)';

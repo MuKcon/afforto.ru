@@ -1,0 +1,23 @@
+$namespace: 'bitrix';
+$component: 'catalog';
+$template: 'services';
+$class: #{$component};
+
+.ns-#{$namespace}.c-#{$component}.c-#{$component}-#{$template} {
+  .#{$class}-wrapper {
+    display: block;
+  }
+
+  .#{$class}-description {
+    display: block;
+  }
+
+  * + .#{$class}-description,
+  * + .services-sections,
+  * + .services-section,
+  .#{$class}-description + *,
+  .services-sections + *,
+  .services-section + * {
+    margin-top: 20px;
+  }
+}

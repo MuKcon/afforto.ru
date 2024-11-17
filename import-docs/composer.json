@@ -1,0 +1,16 @@
+{
+  "name": "vendor_name/bx",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "marat",
+      "email": "kastiel63@gmail.com"
+    }
+  ],
+  "require": {
+    "symfony/var-dumper": "4.4.x-dev",
+    "nicolab/php-ftp-client": "v1.6.0"
+  }
+}

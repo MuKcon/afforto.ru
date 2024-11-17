@@ -1,0 +1,177 @@
+@keyframes news-detail-animate-footer-arrow {
+    0% {
+        padding-left: 0;
+        padding-right: 20px;
+    }
+    50% {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    100% {
+        padding-left: 0;
+        padding-right: 20px;
+    }
+}
+.c-news-detail.c-news-detail-default .news-detail-header {
+    font-size: 0;
+    margin-bottom: 10px;
+}
+.c-news-detail.c-news-detail-default .news-detail-header-date {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-right: 35px;
+    margin-bottom: 10px;
+    color: #696969;
+}
+.c-news-detail.c-news-detail-default .news-detail-tags-list {
+    font-size: 0;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 14px;
+    color: #FFF;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag.news-detail-tag-color-1 {
+    background-color: #ffd800;
+    color: #1f1f1f;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag.news-detail-tag-color-2 {
+    background-color: #d7569c;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag.news-detail-tag-color-3 {
+    background-color: #3eb5f1;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag.news-detail-tag-color-4 {
+    background-color: #52ac62;
+}
+.c-news-detail.c-news-detail-default .news-detail-tag.news-detail-tag-color-5 {
+    background-color: #1f1f1f;
+}
+.c-news-detail.c-news-detail-default .news-detail-text-preview,
+.c-news-detail.c-news-detail-default .news-detail-text-detail {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #1d1d1d;
+}
+.c-news-detail.c-news-detail-default .news-detail-text-preview {
+    margin-bottom: 30px;
+}
+.c-news-detail.c-news-detail-default .news-detail-text-image-wrap {
+    margin-bottom: 30px;
+}
+.c-news-detail.c-news-detail-default .news-detail-text-image {
+    height: 360px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.c-news-detail.c-news-detail-default .news-detail-tags-list {
+    margin-top: 30px;
+}
+.c-news-detail.c-news-detail-default .news-detail-read-also,
+.c-news-detail.c-news-detail-default .news-detail-footer {
+    margin-top: 35px;
+    padding-top: 35px;
+    border-top: 1px solid #e8e8e8;
+}
+.c-news-detail.c-news-detail-default .news-detail-footer-back {
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 35px;
+    color: #525458;
+    white-space: nowrap;
+}
+.c-news-detail.c-news-detail-default .news-detail-footer-back span {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 35px;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    transition: 0.4s;
+}
+.c-news-detail.c-news-detail-default .news-detail-footer-back-icon {
+    font-size: 27px;
+    padding-right: 20px;
+}
+.c-news-detail.c-news-detail-default .news-detail-footer-back:hover .news-detail-footer-back-icon {
+    animation-name: news-detail-animate-footer-arrow;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+.c-news-detail.c-news-detail-default .news-detail-footer-social {
+    display: inline-block;
+    vertical-align: middle;
+    float: right;
+}
+
+/****************************/
+
+.expertwrap {
+display:flex;
+}
+
+.expertwrap .news-detail-text-image-wrap {
+  width: 30%;
+}
+.expertinfo {
+  margin-left: 20px;
+}
+.expertfield {
+  display: flex;
+min-height: 25px;
+margin-top: 5px;
+}
+.expert-field-label {
+  font-size: 14px;
+  line-height: 20px;
+  color: #B0B0B0;
+}
+.expert-field-val {
+  margin-left: 10px;
+}
+
+.c-news-detail.c-news-detail-default .expertwrap .news-detail-text-image {
+  height: 250px;
+  background-size: contain;
+}
+
+
+@media all and (max-width: 1024px) {
+.expertwrap .news-detail-text-image-wrap {
+  width: 20%;
+}
+
+.expertwrap .news-detail-text-image {
+/*  height: 160px!important;*/
+}
+}
+
+@media all and (max-width: 1024px) {
+
+.expertwrap {
+display:block;
+}
+
+.expertwrap .news-detail-text-image-wrap {
+  width: 40%;
+}
+
+}
+
+@media all and (max-width: 475px) {
+.expertwrap .news-detail-text-image-wrap {
+  width: 100%;
+}
+}

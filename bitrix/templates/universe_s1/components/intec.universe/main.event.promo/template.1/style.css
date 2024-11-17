@@ -1,0 +1,89 @@
+.c-event-promo.c-event-promo-template-1 {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-header {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 55px;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-header + .widget-event-promo-content {
+  margin-top: 55px;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text {
+  font-size: 16px;
+  line-height: 24px;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text-wrap {
+  max-width: 100%;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 15px;
+  color: #FFF;
+  text-align: center;
+  text-decoration: none;
+  padding: 20px 45px;
+  -webkit-border-radius: 28px;
+  -moz-border-radius: 28px;
+  border-radius: 28px;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button-wrap {
+  margin-top: 80px;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-picture {
+  display: inline-block;
+  width: 100%;
+  max-width: 550px;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-content-picture-wrap {
+  text-align: center;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-header[data-align=left], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text[data-align=left], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button-wrap[data-align=left] {
+  text-align: left;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-header[data-align=center], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text[data-align=center], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button-wrap[data-align=center] {
+  text-align: center;
+}
+.c-event-promo.c-event-promo-template-1 .widget-event-promo-header[data-align=right], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text[data-align=right], .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button-wrap[data-align=right] {
+  text-align: right;
+}
+.c-event-promo.c-event-promo-template-1[data-theme=dark] .widget-event-promo-header, .c-event-promo.c-event-promo-template-1[data-theme=dark] .widget-event-promo-content-text {
+  color: #333;
+}
+.c-event-promo.c-event-promo-template-1[data-theme=light] .widget-event-promo-header, .c-event-promo.c-event-promo-template-1[data-theme=light] .widget-event-promo-content-text {
+  color: #FFF;
+}
+@media all and (max-width: 768px) {
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-header {
+    font-size: 35px;
+    line-height: 40px;
+  }
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-header + .widget-event-promo-content {
+    margin-top: 35px;
+  }
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-text {
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-button-wrap {
+    margin-top: 45px;
+  }
+  .c-event-promo.c-event-promo-template-1 .widget-event-promo-content-picture-wrap {
+    display: none;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

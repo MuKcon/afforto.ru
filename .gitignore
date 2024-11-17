@@ -1,0 +1,88 @@
+# Системные файлы ОС
+.DS_Store
+Thumbs.db
+
+# Логи и дампы базы данных
+*.log
+*.sql
+*.sql.gz
+*.zip
+
+# Локальные настройки окружения
+.env
+.env.local
+.env.*.local
+*.swp
+
+# Папки кешей Битрикс
+/bitrix/cache/
+/bitrix/managed_cache/
+/bitrix/stack_cache/
+/bitrix/html_pages/
+/upload/tmp/
+/upload/resize_cache/
+
+# Временные файлы и сессии
+/bitrix/modules/.session.php
+
+# Конфигурации Битрикс
+/bitrix/.settings.php
+/bitrix/.settings_extra.php
+/local/php_interface/dbconn.php
+
+# Резервные копии и отладочные файлы
+*.bak
+/local/tools/
+/local/dumps/
+/local/backups/
+
+# Исключаем директории загрузок
+/upload/
+
+
+# Исключаем файлы IDE
+.idea/
+
+
+# archives
+*.gz
+.gz.
+*.tar
+.tar.
+*.rar
+*.zip
+*.7z
+*.bz
+.bz.
+
+# bitrix service scripts
+/bitrix_setup.php
+/restore.php
+/bitrix_server_test.php
+
+
+#Исключаем стандартные части ядра Битрикс
+/bitrix/components/bitrix/
+/bitrix/modules/
+/bitrix/admin/
+/bitrix/activities/
+/bitrix/backup/
+/bitrix/blocks/
+/bitrix/elements/
+/bitrix/catalog_export/
+/bitrix/css/
+/bitrix/gadgets/
+/bitrix/images/
+/bitrix/js/
+/bitrix/legal/
+/bitrix/otp/
+/bitrix/panel/
+/bitrix/php_interface/
+/bitrix/resources/
+/bitrix/services/
+/bitrix/sounds/
+/bitrix/templates/.default/
+/bitrix/themes/
+/bitrix/tmp/
+/bitrix/wizards/
+

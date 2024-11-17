@@ -1,0 +1,32 @@
+.docsList{border: 1px solid #352ca6;}
+.docsList .docsHead{display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-between;padding: 15px 0;
+	border-bottom: 1px solid #352ca6;background: #352ca6;color: #fff;}
+.docsList .docsHead .item{flex: 0 0 25%; padding: 0 20px; display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;margin: 10px 0;}
+.docsList > .item{display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-between; border-bottom: 1px solid #ddd;padding: 10px 0;}
+.docsList > .item:hover {background: rgba(0, 0, 0, 0.1); }
+.docsList > .item:last-child{border:0 none;}
+.docsList .item .prop{display: flex;flex: 0 0 25%;justify-content: center;}
+.docsList .item .prop.name{padding-left:20px;}
+.docsList .item .prop.name, .docsList .docsHead ._name{justify-content: flex-start;}
+
+.docsFilter{margin:15px 0;}
+.docsFilter span{display:block;margin-bottom: 10px;}
+.docsFilter form input{padding: 8px 10px;}
+.docsFilter form button{background: #352ca6;color: #fff;border: 0 none;padding: 10px 20px;}
+
+@media screen and (min-width:768px){
+	.docsList .item .prop .mobileHead{display:none;}
+}
+
+@media screen and (max-width:768px){
+	.docsList .item .prop .mobileHead{display:block;margin-bottom: 10px;}
+	.docsList .docsHead{display:none;}
+	.docsList .item .prop{display: flex;flex: 0 0 50%;justify-content: center !important;flex-direction: column;text-align: center;}
+	.docsList .item .prop.name{padding-left:0;}
+}
+
+@media screen and (max-width:576px){
+	.docsFilter form button{display: block;width: 220px;margin: 20px auto;}
+	.docsFilter form input{width: 100%;margin-top: 5px;}
+	.docsList .item .prop, .docsList .item .prop .mobileHead{font-size:14px;}
+}

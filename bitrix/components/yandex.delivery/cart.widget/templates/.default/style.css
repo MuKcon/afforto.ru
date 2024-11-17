@@ -1,0 +1,28 @@
+.button--yadelivery--choice
+{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ffdb4d !important;
+    color: #000;
+    border: 0 !important;
+    margin-top: 10px;
+    text-decoration: none!important;
+}
+.button--yadelivery--choice:hover
+{
+    background-color: #ffd633 !important;
+}
+.yadelivery--name--pvz
+{
+    display: block;
+}

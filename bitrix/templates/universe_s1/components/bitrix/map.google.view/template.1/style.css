@@ -1,0 +1,127 @@
+.c-google-map-view.c-google-map-view-template-1 {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 100%;
+    font-size: 0;
+}
+.c-google-map-view.c-google-map-view-template-1 .intec-content,
+.c-google-map-view.c-google-map-view-template-1 .intec-content-wrapper {
+    height: 100%;
+}
+.c-google-map-view.c-google-map-view-template-1 .intec-content-wrapper {
+    margin: 0;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-map {
+    display: inline-block;
+    vertical-align: middle;
+    width: 60%;
+    height: 100%;
+    background: #d3d3d3;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-map.full-width {
+    width: 100%;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-info {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 40%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 25px 0;
+    z-index: 2;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-info-title {
+    max-width: 350px;
+    margin: auto;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: left;
+    padding: 0 20px 30px 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-info-header {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 18px;
+    letter-spacing: 1px;
+    color: #6a696e;
+    margin-bottom: 5px;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-info-block {
+    display: block;
+    max-width: 350px;
+    margin: auto;
+    padding: 0 20px 25px 20px;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-phones.with-button {
+    margin-bottom: 15px;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-button {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 15px 20px;
+    color: #FFF;
+    cursor: pointer;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    transition: 0.4s;
+}
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-phone a,
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-email a {
+    color: #2d2d2d;
+    text-decoration: none;
+}
+
+.c-google-map-view.c-google-map-view-template-1 .google-map-view-info.block-over-map {
+    position: absolute;
+    max-width: 400px;
+    width: initial;
+    top: 35px;
+    left: 100px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.c-google-map-view.c-google-map-view-template-1 .block-over-map .google-map-view-info-title,
+.c-google-map-view.c-google-map-view-template-1 .block-over-map .google-map-view-info-block {
+    max-width: 400px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+@media all and (max-width: 720px) {
+    .c-google-map-view.c-google-map-view-template-1 .google-map-view-map,
+    .c-google-map-view.c-google-map-view-template-1 .google-map-view-info {
+        display: block;
+        width: initial;
+    }
+    .c-google-map-view.c-google-map-view-template-1 .google-map-view-info.block-over-map {
+        left: 0;
+        top: 0;
+        max-width:350px;
+        width: initial;
+        position: relative;
+    }
+    .c-google-map-view.c-google-map-view-template-1 .block-over-map .google-map-view-info-title,
+    .c-google-map-view.c-google-map-view-template-1 .block-over-map .google-map-view-info-block {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

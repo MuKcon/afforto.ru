@@ -1,0 +1,27 @@
+$component: 'header';
+$template: 'template-1';
+$class: #{$component};
+
+.c-#{$component}.c-#{$component}-#{$template} {
+  .widget-banner {
+    .widget-banner-5 {
+      display: block;
+
+      &[data-wide="false"] {
+        padding-top: 40px;
+        padding-bottom: 40px;
+
+        @media all and (max-width: 1000px) {
+          padding-top: 20px;
+          padding-bottom: 20px;
+        }
+      }
+    }
+
+    .widget-element {
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+  }
+}

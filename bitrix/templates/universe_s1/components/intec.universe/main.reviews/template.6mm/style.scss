@@ -1,0 +1,149 @@
+$component: 'reviews';
+$template: 'template-6';
+
+@mixin box-sizing() {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+@mixin transition ($time, $property) {
+  -webkit-transition: $property $time;
+  -moz-transition: $property $time;
+  -ms-transition: $property $time;
+  -o-transition: $property $time;
+  transition: $property $time;
+}
+
+.c-#{$component}.c-#{$component}-#{$template} {
+  .widget-header + .widget-content {
+    margin-top: 25px;
+  }
+  .widget-content {
+    &-wrap {
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+  }
+  .widget-element {
+    position: relative;
+    height: 100%;
+    margin-left: 60px;
+    padding: 20px 20px 20px 95px;
+    border: 1px solid #f1f1f1;
+    background-color: #FFF;
+    @include border-radius(7px);
+    @include box-sizing();
+    @include transition(0.4s, null);
+    
+    &:hover {
+      -webkit-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+      -moz-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+      box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+    }
+    &-wrap {
+      padding: 0 20px 20px 20px;
+    }
+    &-picture {
+      width: 120px;
+      height: 120px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      @include border-radius(50%);
+
+      &-wrap {
+        position: absolute;
+        top: 30px;
+        left: -60px;
+      }
+    }
+    &-text {
+      min-height: 140px;
+    }
+    &-name {
+      font-size: 14px;
+      line-height: 21px;
+      color: #515151;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &-position {
+      font-size: 12px;
+      line-height: 18px;
+      color: #bcbcbc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 18px;
+    }
+    &-delimiter {
+      width: 30px;
+      height: 1px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+    &-content {
+      font-size: 14px;
+      line-height: 21px;
+      color: #606060;
+    }
+  }
+  .widget-footer {
+    padding-top: 10px;
+
+    &-all {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 25px;
+      text-decoration: none;
+      padding: 7px 12px;
+      border: 1px solid;
+      @include border-radius(3px);
+      @include transition(0.4s, null);
+
+      &:hover {
+        color: #FFF;
+      }
+    }
+  }
+  @media all and (max-width: 720px) {
+    .widget-element {
+      &-content {
+        font-size: 13px;
+        line-height: 18px;
+      }
+    }
+  }
+  @media all and (max-width: 500px) {
+    .widget-element {
+      padding: 60px 20px 20px 20px;
+      margin-left: 0;
+
+      &-wrap {
+        padding-top: 40px;
+      }
+      &-picture {
+        width: 80px;
+        height: 80px;
+
+        &-wrap {
+          top: -40px;
+          left: 20px;
+        }
+      }
+      &-position {
+        height: initial;
+      }
+      &-text {
+        min-height: initial;
+      }
+    }
+  }
+}

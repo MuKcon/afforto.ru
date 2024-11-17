@@ -1,0 +1,213 @@
+$component: 'reviews';
+$template: 'template-7';
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+@mixin box-sizing() {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@mixin transition($time, $property) {
+  -webkit-transition: $property $time;
+  -moz-transition: $property $time;
+  -ms-transition: $property $time;
+  -o-transition: $property $time;
+  transition: $property $time;
+}
+
+.c-#{$component}.c-#{$component}-#{$template} {
+  .widget-header + .widget-content-wrap {
+    margin-top: 30px;
+  }
+  .widget-element {
+    position: relative;
+    padding-top: 60px;
+    background-color: #FFF;
+    -webkit-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+    -moz-box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.20);
+    @include border-radius(7px);
+
+    &::after {
+      content: '';
+      display: table;
+      width: 100%;
+    }
+    &-wrap {
+      padding: 40px 20px 20px 20px;
+    }
+    &-picture {
+      width: 80px;
+      height: 80px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      @include border-radius(50%);
+
+      &-wrap {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        margin-left: -40px;
+      }
+    }
+    &-info {
+      max-width: 340px;
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+    &-name {
+      font-size: 14px;
+      line-height: 21px;
+      color: #303030;
+    }
+    &-position {
+      font-size: 12px;
+      line-height: 18px;
+      color: #6a6a6a;
+      height: 36px;
+      overflow: hidden;
+    }
+    &-text {
+      font-size: 14px;
+      line-height: 21px;
+      text-align: center;
+      color: #9e9e9e;
+      height: 84px;
+      margin: 20px 100px 40px 100px;
+      overflow: hidden;
+    }
+  }
+  .widget-content {
+    position: relative;
+
+    &-wrap {
+      &-nav {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+    }
+  }
+  .owl {
+    &-dots {
+      font-size: 0;
+      text-align: center;padding-top: 10px;
+    }
+    &-dot {
+      display: inline-block;
+      margin: 0 10px 10px 10px;
+
+      span {
+        display: block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #000;
+        @include border-radius(50%);
+        @include box-sizing();
+        @include transition(0.4s, null);
+      }
+      &.active span {
+        background-color: #000;
+      }
+    }
+    &-nav {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+    }
+    &-prev {
+      left: -40px;
+      @extend %navs;
+
+      i {
+        padding-right: 2px;
+      }
+    }
+    &-next {
+      right: -40px;
+      @extend %navs;
+
+      i {
+        padding-left: 3px;
+      }
+    }
+  }
+  %navs {
+    position: absolute;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    margin-top: -18px;
+    @include border-radius(50%);
+    @include transition(0.4s, null);
+
+    &:hover {
+      background-color: #E3E3E3;
+    }
+    i {
+      line-height: 35px;
+      font-size: 25px;
+    }
+  }
+  .widget-footer {
+    padding-top: 20px;
+
+    &-all {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 25px;
+      text-decoration: none;
+      padding: 7px 12px;
+      border: 1px solid;
+      @include border-radius(3px);
+      @include transition(0.4s, null);
+
+      &:hover {
+        color: #FFF;
+      }
+    }
+  }
+  @media all and (max-width: 1100px) {
+    .widget-element {
+      &-text {
+        margin-left: 50px;
+        margin-right: 50px;
+      }
+    }
+  }
+  @media all and (max-width: 720px) {
+    .widget-element {
+      &-text {
+        font-size: 12px;
+        line-height: 18px;
+        height: 90px;
+      }
+    }
+  }
+  @media all and (max-width: 700px) {
+    .widget-content-wrap-nav {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .widget-element {
+      &-text {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
+    .owl-nav {
+      display: none;
+    }
+  }
+
+}
