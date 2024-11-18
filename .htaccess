@@ -163,5 +163,5 @@ ErrorDocument 404 /404.php
 </IfModule>
 
 
-Redirect 301 /providers/  https://cloud.afforto.info/d/s/oi3qR6E0EWqKZ4iEiDVxURcaTbltLdLx/fgr3TeYvbbC-U27l-i9QEv-o5mTUwFAM-m7xATQfahgk 
-
+Redirect 301 /providers/ https://cloud.afforto.info/d/s/oi3qR6E0EWqKZ4iEiDVxURcaTbltLdLx/fgr3TeYvbbC-U27l-i9QEv-o5mTUwFAM-m7xATQfahgk 
+Redirect 301 /software/ https://cloud.afforto.info/d/s/104VpL4UqzrmGE6ngFgQO17zSouUz14H/a9xSYM0bD5NqC3nCYDCOu02lrGosgFpm-KrpgsKG1xQs
