@@ -13,6 +13,7 @@ Thumbs.db
 .env.local
 .env.*.local
 *.swp
+.htaccess
 
 # Папки кешей Битрикс
 /bitrix/cache/
@@ -86,3 +87,4 @@ Thumbs.db
 /bitrix/tmp/
 /bitrix/wizards/
 
+/robots.txt

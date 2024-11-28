@@ -23,8 +23,8 @@ ErrorDocument 404 /404.php
   RewriteCond %{HTTP_HOST} ^www\.afforto\.ru$ [NC]
   RewriteRule ^(.*)$ https://afforto.ru/$1 [R=301,L]
 
-  ; RewriteCond %{HTTP_HOST} !^afforto\.ru
-  ; RewriteRule (.*) https://afforto.ru/ [R=301,L]
+  RewriteCond %{HTTP_HOST} !^afforto\.ru
+  RewriteRule (.*) https://afforto.ru/ [R=301,L]
 
   RewriteCond %{THE_REQUEST} /(.*)index.php.*$
   RewriteCond %{THE_REQUEST} !bitrix/admin/
@@ -33,12 +33,12 @@ ErrorDocument 404 /404.php
 
 
 
-	; RewriteCond %{ENV:HTTPS} !on
+	RewriteCond %{ENV:HTTPS} !on
 
-	; RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  ; RewriteCond %{SERVER_PORT} !^443$
-  ; RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+  RewriteCond %{SERVER_PORT} !^443$
+  RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
  </IfModule>
 
 <IfModule mod_dir.c>

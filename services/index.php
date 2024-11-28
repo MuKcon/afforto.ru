@@ -738,7 +738,7 @@ $APPLICATION->SetPageProperty("title", "IT услуги для компаний 
 		"ELEMENTS_LIST_VIEW_DISPLAY_DESCRIPTION" => "N",
 		"ELEMENTS_LIST_VIEW_IMAGES" => "SQUARE",
 		"ELEMENTS_LIST_VIEW_LINE_COUNT" => "2",
-		"cross_nid" => "673a2daa30f06f4b48af30b6",
+		"cross_nid" => "673b0d4047af4b5195a187d5",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "/services/",
 			"section" => "#SECTION_CODE#/",
