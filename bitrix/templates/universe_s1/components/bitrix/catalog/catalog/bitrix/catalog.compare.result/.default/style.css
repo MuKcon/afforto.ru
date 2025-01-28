@@ -31,24 +31,7 @@
 	color: #303030;
 }
 .compare-result-clear {
-	display: inline-block;
 	float: right;
-	border: 2px solid #cecece;
-	border-radius: 3px;
-	color: #929292;
-	font-size: 13px;
-	font-weight: bold;
-	padding: 13px 15px;
-	cursor: pointer;
-	text-decoration: none !important;
-	transition: .3s;
-}.compare-result-clear:hover{
-	 background: #cecece;
-	 color: #ffffff;
- }
-
-.compare-result-clear i {
-	margin-right: 8px;
 }
 
 .bx_compare .compare-item-td {
@@ -156,12 +139,15 @@
 }
 .bx_filtren_container ul li,
 .bx_filtren_container ul li:before {
-	display: none;
+	display: none !important;
 }
-.bx_filtren_container ul li.visible {
-	display: inline-block;
+.bx_filtren_container ul li.property-visible {
+	display: -webkit-inline-box !important;
+	display: -ms-inline-flexbox !important;
+	display: inline-flex !important;
+
 	vertical-align: top;
-	margin: 0px 5px 5px 0px;
+	margin: 0 5px 5px 0;
 }
 .bx_filtren_container ul li span {
 	font-size: 12px;
@@ -332,13 +318,17 @@
 .bx_compare .data_table_props tr td:first-of-type i {
 	display: none;
 	position: absolute;
-	right: 25px;
-	margin-top: 3px;
+	top: 50%;
+	right: 10px;
+	margin-top: -6px;
 	color: #929292;
-	font-size: 11px;
+	font-size: 12px;
+	line-height: 1;
 	cursor: pointer;
-}.bx_compare .data_table_props tr:hover td:first-of-type i {
-	 display: inline-block;
+}
+
+.bx_compare .data_table_props tr:hover td:first-of-type i {
+	 display: block;
 }
 
 .bx_filtren_container .property {
@@ -395,7 +385,6 @@
 	.compare-result-clear {
 		float: none;
 		margin-bottom: 10px;
-		padding: 10px 13px;
 	}
 	.bx_compare .compare_view.data_table_props td {
 		padding: 5px;

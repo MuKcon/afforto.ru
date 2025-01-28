@@ -1,0 +1,58 @@
+.workflow-component {
+    text-align: center;
+    margin: 20px;
+}
+
+.workflow-stages {
+    display: flex;
+    flex-wrap: wrap; /* Элементы переходят на новую строку при переполнении */
+    justify-content: center; /* Центрируем строки */
+    gap: 20px; /* Расстояние между элементами */
+}
+
+.workflow-stage {
+    flex: 1 1 calc(20% - 20px); /* По умолчанию 5 элементов в строке (большие экраны) */
+    max-width: calc(20% - 20px); /* Ограничиваем ширину */
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация */
+}
+
+.workflow-stage:hover {
+    transform: scale(1.05); /* Увеличение размера */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Увеличение тени при наведении */
+}
+
+.workflow-icon img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Для LG: 3 элемента в строке */
+@media (max-width: 1200px) {
+    .workflow-stage {
+        flex: 1 1 calc(33.33% - 20px); /* 3 элемента в строке */
+        max-width: calc(33.33% - 20px);
+    }
+}
+
+/* Для MD: 2 элемента в строке */
+@media (max-width: 992px) {
+    .workflow-stage {
+        flex: 1 1 calc(50% - 20px); /* 2 элемента в строке */
+        max-width: calc(50% - 20px);
+    }
+}
+
+/* Для XS: 1 элемент в строке */
+@media (max-width: 576px) {
+    .workflow-stage {
+        flex: 1 1 100%; /* Один элемент на строку */
+        max-width: 100%;
+    }
+}

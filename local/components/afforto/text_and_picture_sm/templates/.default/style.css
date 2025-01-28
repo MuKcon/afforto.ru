@@ -1,0 +1,84 @@
+/* Основной стиль компонента */
+.textandpicture-component {
+    background-color: #fff;
+    padding: 10px 20px 40px 20px;
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Контейнер для текста и изображений */
+.textandpicture-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap; /* Все элементы остаются в одной строке */
+    gap: 20px;
+}
+
+/* Текстовый блок */
+.textandpicture-content {
+    flex: 1 1 50%;
+    max-width: 50%;
+}
+
+/* Изображения */
+.textandpicture-image {
+    flex: 1 1 25%;
+    max-width: 25%;
+    text-align: center;
+    display: flex;
+    align-items: center; /* Центрируем изображение по вертикали */
+    justify-content: center;
+}
+
+/* Изображение внутри блока */
+.textandpicture-image img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain; /* Сохраняем пропорции изображения */
+    border-radius: 5px;
+}
+
+.textandpicture-container.no-detail-image .textandpicture-content {
+    max-width: 73%;
+}
+
+/* Изображение слева */
+.textandpicture-component.image-left .textandpicture-container {
+    flex-direction: row-reverse; /* Для расположения картинки слева */
+}
+
+.textandpicture-container li:hover {
+    transform: scale(1.01); /* Увеличение размера */
+}
+
+/* Медиа-запрос для экранов меньше 576px */
+@media (max-width: 575.98px) {
+    /* Изменяем расположение компонентов на вертикальное */
+    .textandpicture-container {
+        flex-direction: column; /* Элементы друг под другом */
+        gap: 15px; /* Расстояние между блоками */
+    }
+
+    /* Текстовый блок занимает всю ширину */
+    .textandpicture-content {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    /* Изображения занимают всю ширину */
+    .textandpicture-image {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+
+    .textandpicture-component.image-left .textandpicture-container {
+        flex-direction: column; 
+    }
+
+    .textandpicture-container.no-detail-image .textandpicture-content {
+        max-width: 100%;
+    }
+    
+}

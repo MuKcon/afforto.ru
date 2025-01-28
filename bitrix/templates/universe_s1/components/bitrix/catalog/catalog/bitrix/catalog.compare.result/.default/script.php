@@ -47,7 +47,7 @@
 
         universe.compare.remove({
             id: product_id,
-            list: '<?=$arParams['NAME']?>',
+            code: '<?=$arParams['NAME']?>',
             iblock: '<?=$arParams['IBLOCK_ID']?>'
         }, function(response){
 
@@ -62,7 +62,7 @@
         $('.compare-result-empty').show();
 
         universe.compare.clear({
-            list: '<?=$arParams['NAME']?>',
+            code: '<?=$arParams['NAME']?>',
         }, function(response){
             $.ajax({
                 type: 'POST',

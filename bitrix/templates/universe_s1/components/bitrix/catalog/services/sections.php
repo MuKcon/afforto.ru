@@ -1,189 +1,167 @@
-<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?php if (defined('B_PROLOG_INCLUDED') && B_PROLOG_INCLUDED === true) ?>
+<?php
 
-use intec\Core;
+use Bitrix\Main\Loader;
 use intec\core\helpers\ArrayHelper;
-use intec\core\helpers\RegExp;
+use intec\core\helpers\Html;
 use intec\core\helpers\StringHelper;
-use intec\core\helpers\Type;
-use intec\constructor\models\Build;
 
 /**
  * @var array $arParams
  * @var array $arResult
- * @global CMain $APPLICATION
- * @global CUser $USER
- * @global CDatabase $DB
- * @var CBitrixComponentTemplate $this
- * @var string $templateName
- * @var string $templateFile
- * @var string $templateFolder
- * @var string $componentPath
  * @var CBitrixComponent $component
+ * @var CBitrixComponentTemplate $this
  */
 
-global $APPLICATION;
+if (!Loader::includeModule('iblock'))
+    return;
+
+if (!Loader::includeModule('intec.core'))
+    return;
 
 $this->setFrameMode(true);
 
-$oBuild = Build::getCurrent();
-$oProperties = null;
+$arParams = ArrayHelper::merge([
+    'SECTIONS_ROOT_SECTION_DESCRIPTION_SHOW' => 'Y',
+    'SECTIONS_ROOT_SECTION_DESCRIPTION_POSITION' => 'top',
+    'SECTIONS_ROOT_CANONICAL_URL_USE' => 'N',
+    'SECTIONS_ROOT_CANONICAL_URL_TEMPLATE' => null,
+    'SECTIONS_ROOT_MENU_SHOW' => 'N',
+    'LIST_ROOT_SHOW' => 'N'
+], $arParams);
 
-if (!empty($oBuild)) {
-    $oPage = $oBuild->getPage();
-    $oProperties = $oPage->getProperties();
-}
+$arIBlock = $arResult['IBLOCK'];
+$arCanonicalUrl = [
+    'USE' => $arParams['SECTIONS_ROOT_CANONICAL_URL_USE'] === 'Y',
+    'TEMPLATE' => $arParams['SECTIONS_ROOT_CANONICAL_URL_TEMPLATE']
+];
 
-$bMenuDisplay = $arParams['MENU_DISPLAY_IN_ROOT'] == 'Y';
+if (empty($arCanonicalUrl['TEMPLATE']))
+    $arCanonicalUrl['USE'] = false;
 
-if (!empty($oProperties)) {
-    if ($arParams['SECTIONS_LIST_VIEW'] == 'settings') {
-        switch ($oProperties->get('template_services_root')) {
-            case 1:
-                $arParams['SECTIONS_LIST_VIEW'] = 'tile';
-                break;
-            case 2:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'CIRCLE';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'N';
-                break;
-            case 3:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'CIRCLE';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'Y';
-                break;
-            case 4:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'SQUARE_BIG';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'N';
-                break;
-            case 5:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'SQUARE_BIG';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'Y';
-                break;
-            case 6:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'SQUARE_SMALL';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'Y';
-                break;
-            case 7:
-                $arParams['SECTIONS_LIST_VIEW'] = 'blocks';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'SQUARE_SMALL';
-                $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'] = 'N';
-                break;
-            case 8:
-                $arParams['SECTIONS_LIST_VIEW'] = 'extend';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'SQUARE';
-                break;
-            case 9:
-                $arParams['SECTIONS_LIST_VIEW'] = 'extend';
-                $arParams['SECTIONS_LIST_VIEW_IMAGES'] = 'CIRCLE';
-                break;
-            case 10:
-                $arParams['SECTIONS_LIST_VIEW'] = 'list';
-                break;
-        }
-    }
+$arDescription = [
+    'SHOW' => $arParams['SECTIONS_ROOT_SECTION_DESCRIPTION_SHOW'] === 'Y',
+    'POSITION' => ArrayHelper::fromRange([
+        'top',
+        'bottom'
+    ], $arParams['SECTIONS_ROOT_SECTION_DESCRIPTION_POSITION']),
+    'VALUE' => !empty($arIBlock) ? $arIBlock['DESCRIPTION'] : null
+];
 
-    if ($arParams['MENU_DISPLAY_IN_ROOT'] == 'settings') {
-        $arMenuDisplayIn = $oProperties->get('menu_display_in');
-        $sPath = '/' . Core::$app->request->getPathInfo();
-        $sPath = RegExp::replaceBy('/^' . RegExp::escape(SITE_DIR) . '/', null, $sPath);
-        $sPath = StringHelper::replace($sPath, [
-            '/' => '.'
-        ]);
+if (empty($arDescription['VALUE']))
+    $arDescription['SHOW'] = false;
 
-        $sSection = null;
+$sLevel = 'ROOT';
 
-        if (Type::isArray($arMenuDisplayIn))
-            foreach ($arMenuDisplayIn as $sKey => $arValue)
-                if (RegExp::isMatchBy('/^'.RegExp::escape($sKey).'/', $sPath))
-                    $sSection = $sKey;
+include(__DIR__.'/parts/menu.php');
+include(__DIR__.'/parts/sections.php');
+include(__DIR__.'/parts/elements.php');
 
-        if (!empty($sSection)) {
-            $sSection .= '.root';
-            $bMenuDisplay = ArrayHelper::getValue($arMenuDisplayIn, [$sSection, 'display']) == 1;
-        }
+$arMenu['SHOW'] = $arMenu['SHOW'] && $arParams['SECTIONS_ROOT_MENU_SHOW'] === 'Y';
+$arElements['SHOW'] = $arElements['SHOW'] && $arParams['LIST_ROOT_SHOW'] === 'Y';
 
-        unset($sSection);
-    }
-}
+$arColumns = [
+    'SHOW' => $arMenu['SHOW']
+];
 
-foreach (['SECTIONS', 'ELEMENTS'] as $sItem) {
-    $sView = ArrayHelper::getValue($arParams, [$sItem.'_LIST_VIEW']);
-    $sView = ArrayHelper::fromRange($arResult['VIEWS_LIST'], $sView);
-    $arParams[$sItem.'_LIST_VIEW'] = $sView;
-}
+if ($arColumns['SHOW'])
+    $arSections['PARAMETERS']['WIDE'] = 'N';
+
+if ($arCanonicalUrl['USE'])
+    $APPLICATION->SetPageProperty('canonical', StringHelper::replaceMacros($arCanonicalUrl['TEMPLATE'], [
+        'SITE_DIR' => SITE_DIR,
+        'SERVER_NAME' => SITE_SERVER_NAME
+    ]));
+
 ?>
-<div class="intec-header-wrap">
-    <div class="intec-content">
-        <div class="intec-content-wrapper">
-            <h1 class="intec-header">
-                <? $APPLICATION->ShowTitle("header") ?>
-            </h1>
+<?php if ($arResult['CONTENT']['ROOT']['BEGIN']['SHOW']) { ?>
+    <?php $APPLICATION->IncludeComponent(
+        'bitrix:main.include',
+        '.default',
+        [
+            'AREA_FILE_SHOW' => 'file',
+            'PATH' => $arResult['CONTENT']['ROOT']['BEGIN']['PATH'],
+            'EDIT_TEMPLATE' => ''
+        ],
+        $component
+    ) ?>
+<?php } ?>
+<div class="ns-bitrix c-catalog c-catalog-services-1 p-sections">
+    <div class="catalog-wrapper intec-content intec-content-visible">
+        <div class="catalog-wrapper-2 intec-content-wrapper">
+            <div class="catalog-content">
+                <?php if ($arColumns['SHOW']) { ?>
+                    <div class="catalog-content-left intec-content-left">
+                        <?php if ($arMenu['SHOW']) { ?>
+                            <div class="catalog-menu">
+                                <?php $APPLICATION->IncludeComponent(
+                                    'bitrix:menu',
+                                    $arMenu['TEMPLATE'],
+                                    $arMenu['PARAMETERS'],
+                                    $component
+                                ) ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="catalog-content-right intec-content-right">
+                        <div class="catalog-content-right-wrapper intec-content-right-wrapper">
+                <?php } ?>
+                <?php if ($arDescription['SHOW'] && $arDescription['POSITION'] === 'top') { ?>
+                    <div class="<?= Html::cssClassFromArray([
+                        'catalog-description',
+                        'catalog-description-'.$arDescription['POSITION'],
+                        'intec-ui-markup-text'
+                    ]) ?>"><?= $arDescription['VALUE'] ?></div>
+                <?php } ?>
+                <?php if ($arElements['SHOW'] && $arElements['POSITION'] === 'top') { ?>
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.section',
+                        $arElements['TEMPLATE'],
+                        $arElements['PARAMETERS'],
+                        $component
+                    ); ?>
+                <?php } ?>
+                <?php if ($arSections['SHOW']) { ?>
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.section.list',
+                        $arSections['TEMPLATE'],
+                        $arSections['PARAMETERS'],
+                        $component
+                    ); ?>
+                <?php } ?>
+                <?php if ($arElements['SHOW'] && $arElements['POSITION'] === 'bottom' || !$arElements['SHOW'] && !empty($arElements['TEMPLATE']) && $arParams['LIST_ROOT_SHOW'] === 'Y') { ?>
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.section',
+                        $arElements['TEMPLATE'],
+                        $arElements['PARAMETERS'],
+                        $component
+                    ); ?>
+                <?php } ?>
+                <?php if ($arDescription['SHOW'] && $arDescription['POSITION'] === 'bottom') { ?>
+                    <div class="<?= Html::cssClassFromArray([
+                        'catalog-description',
+                        'catalog-description-'.$arDescription['POSITION'],
+                        'intec-ui-markup-text'
+                    ]) ?>"><?= $arDescription['VALUE'] ?></div>
+                <?php } ?>
+                <?php if ($arColumns['SHOW']) { ?>
+                        </div>
+                    </div>
+                    <div class="intec-ui-clear"></div>
+            <?php } ?>
+            </div>
         </div>
     </div>
 </div>
-<div class="intec-content clearfix">
-    <div class="intec-content-wrapper">
-        <?php if ($bMenuDisplay) { ?>
-            <div class="intec-content-left">
-                <?php $APPLICATION->IncludeComponent(
-                    'bitrix:menu',
-                    'vertical',
-                    array(
-                        'IBLOCK_TYPE' => $arParams['IBLOCK_TYPE'],
-                        'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-                        'PROPERTY_IMAGE' => $arParams['PROPERTY_IMAGE'],
-                        'PROPERTY_SHOW_HEADER_SUBMENU' => $arParams['SHOW_HEADER_SUBMENU'],
-                        'ROOT_MENU_TYPE' => $arParams['MENU_ROOT_TYPE'],
-                        'MENU_CACHE_TYPE' => 'N',
-                        'MAX_LEVEL' => $arParams['MENU_MAX_LEVEL'],
-                        'CHILD_MENU_TYPE' => $arParams['MENU_CHILD_TYPE'],
-                        'USE_EXT' => 'Y',
-                        'DELAY' => 'N',
-                        'ALLOW_MULTI_SELECT' => 'N',
-                        'HIDE_CATALOG' => 'Y'
-                    ),
-                    $component
-                ) ?>
-            </div>
-            <div class="intec-content-right">
-                <div class="intec-content-right-wrapper">
-        <?php } ?>
-        <?$res = CIBlock::GetByID($arParams["IBLOCK_ID"]);
-        $ar_res = $res->GetNext();
-        if($ar_res["DESCRIPTION"]) { ?>
-           <div class="description">
-               <?=$ar_res["DESCRIPTION"]?>
-               <br>
-               <br>
-           </div>
-        <?}?>
-        <? $APPLICATION->IncludeComponent(
-            'bitrix:catalog.section.list',
-            $arParams['SECTIONS_LIST_VIEW'],
-            array(
-                'DISPLAY_DESCRIPTION' => $arParams['SECTIONS_LIST_VIEW_DISPLAY_DESCRIPTION'],
-                'IMAGES' => $arParams['SECTIONS_LIST_VIEW_IMAGES'],
-                'LINE_COUNT' => $arParams['SECTIONS_LIST_VIEW_LINE_COUNT'],
-
-                'IBLOCK_TYPE' => $arParams['IBLOCK_TYPE'],
-                'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-                'CACHE_TYPE' => $arParams['CACHE_TYPE'],
-                'CACHE_TIME' => $arParams['CACHE_TIME'],
-                'CACHE_GROUPS' => $arParams['CACHE_GROUPS'],
-                'COUNT_ELEMENTS' => $arParams['SECTION_COUNT_ELEMENTS'],
-                'TOP_DEPTH' => $arParams['SECTION_TOP_DEPTH'],
-                'SECTION_URL' => $arResult['FOLDER'].$arResult['URL_TEMPLATES']['section'],
-                "ADD_SECTIONS_CHAIN" => (isset($arParams["ADD_SECTIONS_CHAIN"]) ? $arParams["ADD_SECTIONS_CHAIN"] : ''),
-                "HIDE_SECTION_NAME" => (isset($arParams["SECTIONS_HIDE_SECTION_NAME"]) ? $arParams["SECTIONS_HIDE_SECTION_NAME"] : "N"),
-            ),
-            $component
-        ); ?>
-        <?php if ($bMenuDisplay) { ?>
-                </div>
-            </div>
-        <?php } ?>
-    </div>
-</div>
+<?php if ($arResult['CONTENT']['ROOT']['END']['SHOW']) { ?>
+    <?php $APPLICATION->IncludeComponent(
+        'bitrix:main.include',
+        '.default',
+        [
+            'AREA_FILE_SHOW' => 'file',
+            'PATH' => $arResult['CONTENT']['ROOT']['END']['PATH'],
+            'EDIT_TEMPLATE' => ''
+        ],
+        $component
+    ) ?>
+<?php } ?>

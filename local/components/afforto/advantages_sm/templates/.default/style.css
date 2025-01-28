@@ -1,0 +1,66 @@
+.advantages {
+    background-color: #f7f7f7; /* Серый цвет фона */
+    padding-top: 10px; /* Отступы сверху и снизу */
+    padding-bottom: 40px;
+}
+
+.advantages-container {
+    max-width: 1200px; /* Максимальная ширина блока */
+    margin: 0 auto; /* Центрирование контейнера */
+    padding: 0 15px; /* Отступы внутри контейнера */
+}
+
+.advantages-items {
+    display: flex;
+    flex-wrap: wrap; /* Элементы переносятся на новую строку при переполнении */
+    gap: 20px; /* Расстояние между элементами */
+    justify-content: center; /* Центрируем содержимое */
+}
+
+.advantages-item {
+    flex: 1 1 calc(25% - 20px); /* 4 элемента в строке (при ширине >1200px) */
+    max-width: calc(25% - 20px); /* Ограничение ширины */
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация */
+}
+
+.advantages-item:hover {
+    transform: scale(1.05); /* Увеличение размера */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Увеличение тени при наведении */
+}
+
+.advantages-icon img {
+    max-width: 150px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 15px;
+
+}
+
+@media (max-width: 1200px) {
+    .advantages-item {
+        flex: 1 1 calc(33.33% - 20px); /* 3 элемента в строке */
+        max-width: calc(33.33% - 20px);
+    }
+}
+
+@media (max-width: 992px) {
+    .advantages-item {
+        flex: 1 1 calc(50% - 20px); /* 2 элемента в строке */
+        max-width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 576px) {
+    .advantages-item {
+        flex: 1 1 100%; /* 1 элемент в строке */
+        max-width: 100%;
+    }
+
+}

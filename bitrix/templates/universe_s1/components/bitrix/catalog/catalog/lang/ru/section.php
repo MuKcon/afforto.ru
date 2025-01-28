@@ -1,5 +1,5 @@
 <?php
-$MESS['SECTION_SORT_NAME'] = 'По названию';
-$MESS['SECTION_SORT_PRICE'] = 'По цене';
-$MESS['SECTION_SORT_POPUL'] = 'По популярности';
-$MESS['SECTION_SORT_NONE'] = 'Нет';
+
+$MESS['C_CATALOG_CATALOG_1_SECTION_SORTING_POPULAR'] = 'По популярности';
+$MESS['C_CATALOG_CATALOG_1_SECTION_SORTING_NAME'] = 'По названию';
+$MESS['C_CATALOG_CATALOG_1_SECTION_SORTING_PRICE'] = 'По цене';

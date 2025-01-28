@@ -1,606 +1,647 @@
-<?php if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true)die();
+<?php if (defined('B_PROLOG_INCLUDED') && B_PROLOG_INCLUDED === true) ?>
+<?php
 
+use Bitrix\Main\Loader;
 use intec\Core;
+use intec\core\bitrix\Component;
 use intec\core\helpers\ArrayHelper;
-use intec\core\helpers\RegExp;
+use intec\core\helpers\Html;
+use intec\core\helpers\JavaScript;
 use intec\core\helpers\Type;
 use intec\core\helpers\StringHelper;
-use intec\constructor\models\Build;
-
-global $options;
 
 /**
  * @var array $arParams
- * @var string $prefixPriceSort
- * @global CMain $APPLICATION
+ * @var array $arResult
+ * @var CBitrixComponent $component
+ * @var CBitrixComponentTemplate $this
  */
 
-if (!CModule::IncludeModule('iblock'))
+if (!Loader::includeModule('iblock'))
     return;
 
-$prefixPriceSort = $arResult['PREFIX_PRICE_SORT'];
+if (!Loader::includeModule('intec.core'))
+    return;
 
-if (!isset($arResult['VARIABLES']['SECTION_ID'])) {
-    $rsSections = CIBlockSection::GetList(
-        array(),
-        array(
-            'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-            '=CODE' => $arResult['VARIABLES']['SECTION_CODE']
-        )
-    );
-    if ($arSection = $rsSections->Fetch()){
-        $arResult['VARIABLES']['SECTION_ID'] = $arSection['ID'];
-    }
-}
-
-$oBuild = Build::getCurrent();
-$oProperties = null;
-
-if (!empty($oBuild)) {
-    $oPage = $oBuild->getPage();
-    $oProperties = $oPage->getProperties();
-}
-
-$bMenuDisplay = $arParams['MENU_DISPLAY_IN_SECTION'] == 'Y';
-
-if (!empty($oProperties)) {
-    if ($arParams['MENU_DISPLAY_IN_SECTION'] == 'settings') {
-        $arMenuDisplayIn = $oProperties->get('menu_display_in');
-        $sPath = '/' . Core::$app->request->getPathInfo();
-        $sPath = RegExp::replaceBy('/^' . RegExp::escape(SITE_DIR) . '/', null, $sPath);
-        $sPath = StringHelper::replace($sPath, [
-            '/' => '.'
-        ]);
-
-        $sSection = null;
-
-        if (Type::isArray($arMenuDisplayIn))
-            foreach ($arMenuDisplayIn as $sKey => $arValue)
-                if (RegExp::isMatchBy('/^' . RegExp::escape($sKey) . '/', $sPath))
-                    $sSection = $sKey;
-
-        if (!empty($sSection)) {
-            $sSection .= '.section';
-            $bMenuDisplay = ArrayHelper::getValue($arMenuDisplayIn, [$sSection, 'display']) == 1;
-        }
-
-        unset($sSection);
-    }
-    if ($arParams['MENU_VIEW'] == 'settings') {
-        switch ($oProperties->get('show_sections_icons_in_menu')) {
-            case 1:
-                $arParams['MENU_VIEW'] = 'picture';
-                break;
-            default:
-                $arParams['MENU_VIEW'] = 'default';
-                break;
-        }
-    }
-    switch ($oProperties->get('use_quick_view')) {
-        case 1:
-            $arParams["LIST_QUICK_VIEW_USE"] = 'Y';
-            break;
-        default:
-            $arParams["LIST_QUICK_VIEW_USE"] = 'N';
-            break;
-    }
-    switch ($oProperties->get('use_delimiter_element')) {
-        case 1:
-            $arParams["USE_DELIMITER_ELEMENT"] = 'Y';
-            break;
-        default:
-            $arParams["USE_DELIMITER_ELEMENT"] = 'N';
-            break;
-    }
-    if ($arParams['BASKET_USE'] == 'settings') {
-        switch ($oProperties->get('use_basket')) {
-            case 1:
-                $arParams['BASKET_USE'] = 'Y';
-                break;
-            default:
-                $arParams['BASKET_USE'] = 'N';
-                break;
-        }
-    }
-
-}
 $this->setFrameMode(true);
 
+$oRequest = Core::$app->request;
+$sTemplateId = Html::getUniqueId(null, Component::getUniqueId($this));
+$bIsBase = Loader::includeModule('catalog') && Loader::includeModule('sale');
+$bIsLite = !$bIsBase && Loader::includeModule('intec.startshop');
+$bIsAjax = false;
+$bSeo = Loader::includeModule('intec.seo');
+
+if ($oRequest->getIsAjax()) {
+    $bIsAjax = $oRequest->get('catalog');
+    $bIsAjax = ArrayHelper::getValue($bIsAjax, 'ajax') === 'Y';
+}
+
+$arParams = ArrayHelper::merge([
+    'SECTIONS_CHILDREN_SECTION_DESCRIPTION_SHOW' => 'Y',
+    'SECTIONS_CHILDREN_SECTION_DESCRIPTION_POSITION' => 'top',
+    'SECTIONS_CHILDREN_CANONICAL_URL_USE' => 'N',
+    'SECTIONS_CHILDREN_CANONICAL_URL_TEMPLATE' => null,
+    'SECTIONS_CHILDREN_MENU_SHOW' => 'Y',
+    'SECTIONS_CHILDREN_EXTENDING_USE' => 'N',
+    'SECTIONS_CHILDREN_EXTENDING_COUNT' => 30,
+    'SECTIONS_CHILDREN_EXTENDING_PROPERTY' => 'UF_SECTIONS',
+    'SECTIONS_CHILDREN_EXTENDING_TEMPLATE' => null,
+    'SECTIONS_ARTICLES_EXTENDING_PROPERTY' => 'UF_SECTIONS_ARTICLES',
+    'SECTIONS_ARTICLES_EXTENDING_TEMPLATE' => null,
+    'FILTER_AJAX' => 'N',
+    'SECTIONS_LAYOUT' => '1',
+    'GIFTS_SECTION_LIST_POSITION' => 'bottom'
+], $arParams);
+
+$sLayout = ArrayHelper::fromRange([1, 2], $arParams['SECTIONS_LAYOUT']);
+
+include(__DIR__.'/parts/sort.php');
+
+$arIBlock = $arResult['IBLOCK'];
+$arSection = $arResult['SECTION'];
+$arSeo = null;
+$arCanonicalUrl = [
+    'USE' => $arParams['SECTIONS_CHILDREN_CANONICAL_URL_USE'] === 'Y',
+    'TEMPLATE' => $arParams['SECTIONS_CHILDREN_CANONICAL_URL_TEMPLATE']
+];
+
+$sPrefix = 'INTEREST_PRODUCTS_';
+$iLength = StringHelper::length($sPrefix);
+$arInterestProductsProperties = [];
+
+foreach ($arParams as $sKey => $sValue) {
+    if (!StringHelper::startsWith($sKey, $sPrefix))
+        continue;
+
+    $sKey = StringHelper::cut($sKey, $iLength);
+    $arInterestProductsProperties[$sKey] = $sValue;
+}
+
+unset($sPrefix, $iLength, $sKey, $sValue);
+
+$arInterestProducts = $arSection['INTEREST_PRODUCTS'];
+$GLOBALS['arrFiltersInterestProducts'] = [
+    'ID' => $arInterestProducts['ITEMS']
+];
+
+$arInterestProductsProperties = ArrayHelper::merge($arInterestProductsProperties, [
+    'IBLOCK_ID' => $arParams['IBLOCK_ID'],
+    'FILTER_NAME' => 'arrFiltersInterestProducts',
+    'ELEMENT_COUNT' => $arInterestProducts['COUNT'],
+    'PRICE_CODE' => $arParams['PRICE_CODE'],
+    'SET_BROWSER_TITLE' => 'N',
+    'SET_TITLE' => 'N',
+    'SET_META_KEYWORDS' => 'N',
+    'SET_META_DESCRIPTION' => 'N',
+    'SHOW_ALL_WO_SECTION' => 'Y',
+    'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
+    'CURRENCY_ID' => $arParams['CURRENCY_ID']
+]);
+
+if (empty($arCanonicalUrl['TEMPLATE']) || empty($arSection))
+    $arCanonicalUrl['USE'] = false;
+
+$arDescription = [
+    'SHOW' => $arParams['SECTIONS_CHILDREN_SECTION_DESCRIPTION_SHOW'] === 'Y',
+    'POSITION' => ArrayHelper::fromRange([
+        'top',
+        'bottom'
+    ], $arParams['SECTIONS_CHILDREN_SECTION_DESCRIPTION_POSITION']),
+    'VALUE' => !empty($arSection) ? $arSection['DESCRIPTION'] : null
+];
+
+if (empty($arDescription['VALUE']))
+    $arDescription['SHOW'] = false;
+
+$sLevel = 'CHILDREN';
+
+include(__DIR__.'/parts/menu.php');
+include(__DIR__.'/parts/tags.php');
+include(__DIR__.'/parts/filter.php');
+include(__DIR__.'/parts/sections.php');
+include(__DIR__.'/parts/elements.php');
+
+$arSectionsExtending['PARAMETERS']['ELEMENT_SORT_FIELD'] = 'ID';
+$arArticlesExtending['PARAMETERS']['FILTER_NAME'] = 'arCatalogArticlesExtendingFilter';
+$arArticlesExtending['PARAMETERS']['SORT_BY1'] = 'ID';
+$arSectionsExtending['PARAMETERS']['FILTER_NAME'] = 'arCatalogSectionsExtendingFilter';
+$arTags['SHOWED'] = [
+    'DESKTOP' => false,
+    'MOBILE' => false
+];
+$arMenu['SHOW'] = $arMenu['SHOW'] && $arParams['SECTIONS_CHILDREN_MENU_SHOW'] === 'Y';
+$arColumns = [
+    'SHOW' => $arMenu['SHOW'] || ($arFilter['SHOW'] && $arFilter['TYPE'] === 'vertical')
+];
+
+if ($arColumns['SHOW']) {
+    $arSections['PARAMETERS']['WIDE'] = 'N';
+    $arElements['PARAMETERS']['WIDE'] = 'N';
+    $arSectionsExtending['PARAMETERS']['WIDE'] = 'N';
+} elseif ($arResult['PRODUCTS']['INTEREST']['SHOW']) {
+    $arResult['PRODUCTS']['INTEREST']['POSITION'] = 'footer';
+}
+
+if ($arParams['SECTIONS_LAYOUT'] == 2) {
+    $arSections['PARAMETERS']['WIDE'] = 'Y';
+}
+
+if ($arCanonicalUrl['USE'])
+    $APPLICATION->SetPageProperty('canonical', CIBlock::ReplaceSectionUrl(
+        $arCanonicalUrl['TEMPLATE'],
+        $arSection,
+        true,
+        'S'
+    ));
+
+if (!empty($arSection['PICTURE'])) {
+    $sPicture = CFile::GetPath($arSection['PICTURE']);
+    $APPLICATION->SetPageProperty('og:image', Core::$app->request->getHostInfo() . $sPicture);
+    unset($sPicture);
+}
+
+if ($arTags['SHOW'] && !$bSeo) {
+    $this->SetViewTarget($sTemplateId.'-tags');
+
+    $APPLICATION->IncludeComponent(
+        'intec.universe:tags.list',
+        $arTags['TEMPLATE'],
+        $arTags['PARAMETERS'],
+        $component
+    );
+
+    $this->EndViewTarget();
+}
+
+if ($arTags['SHOW']['MOBILE'] && $bSeo) {
+    $this->SetViewTarget($sTemplateId.'-tags-mobile');
+
+    $APPLICATION->IncludeComponent('intec.seo:filter.tags', '',
+        $arTags['PARAMETERS'], $component);
+
+    $this->EndViewTarget();
+}
+
 ?>
-<div class="intec-content intec-content-visible">
-    <div class="intec-content-wrapper">
-        <div class="intec-content-left">
-            <?php
-            $getListFilter = array(
-                "SECTION_ID" => $arResult["VARIABLES"]["SECTION_ID"]
-            );
-            if ($arParams['INCLUDE_SUBSECTIONS']!='N') {
-                $getListFilter['INCLUDE_SUBSECTIONS'] = 'Y';
-            }
-            if ($arParams['INCLUDE_SUBSECTIONS']=='A') {
-                $getListFilter['SECTION_GLOBAL_ACTIVE'] = 'Y';
-            }
-
-            $db_res = CIBlockElement::GetList(
-                array(),
-                array($getListFilter),
-                false,
-                array()
-            );
-
-            $elements = $db_res->Fetch();
-            if ($arParams["USE_FILTER"]=="Y") {
-                $arFilter = array(
-                    "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                    "ACTIVE" => "Y",
-                    "GLOBAL_ACTIVE" => "Y",
-                );
-                if (0 < intval($arResult["VARIABLES"]["SECTION_ID"]))
-                {
-                    $arFilter["ID"] = $arResult["VARIABLES"]["SECTION_ID"];
-                }
-                elseif ('' != $arResult["VARIABLES"]["SECTION_CODE"])
-                {
-                    $arFilter["=CODE"] = $arResult["VARIABLES"]["SECTION_CODE"];
-                }
-
-                $obCache = new CPHPCache();
-                if ($obCache->InitCache(36000, serialize($arFilter), "/iblock/catalog")) {
-                    $arCurSection = $obCache->GetVars();
-                } elseif ($obCache->StartDataCache()) {
-                    $arCurSection = array();
-                    if (\Bitrix\Main\Loader::includeModule("iblock")) {
-                        $dbRes = CIBlockSection::GetList(array(), $arFilter, false, array("ID"));
-
-                        if (defined("BX_COMP_MANAGED_CACHE")) {
-                            global $CACHE_MANAGER;
-                            $CACHE_MANAGER->StartTagCache("/iblock/catalog");
-
-                            if ($arCurSection = $dbRes->Fetch())
-                            {
-                                $CACHE_MANAGER->RegisterTag("iblock_id_".$arParams["IBLOCK_ID"]);
-                            }
-                            $CACHE_MANAGER->EndTagCache();
-                        } else {
-                            if(!$arCurSection = $dbRes->Fetch())
-                                $arCurSection = array();
-                        }
-                    }
-                    $obCache->EndDataCache($arCurSection);
-                }
-                if (!isset($arCurSection)) {
-                    $arCurSection = array();
-                }
-
-                if ($elements) { ?>
-                    <div class="intec-section-filter-left">
-                        <?$APPLICATION->IncludeComponent(
-                            "bitrix:catalog.smart.filter",
-                            '',
-                            Array(
-                                "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                                "SECTION_ID" => $arCurSection['ID'],
-                                "FILTER_NAME" => $arParams["FILTER_NAME"],
-                                "PRICE_CODE" => $arParams["PRICE_CODE"],
-                                "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                                "CACHE_TIME" => $arParams["CACHE_TIME"],
-                                "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                                "SAVE_IN_SESSION" => "N",
-                                "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
-                                "XML_EXPORT" => "Y",
-                                "SECTION_TITLE" => "NAME",
-                                "SECTION_DESCRIPTION" => "DESCRIPTION",
-                                'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
-                                'HIDE_NOT_AVAILABLE_OFFERS' => $arParams['HIDE_NOT_AVAILABLE_OFFERS'],
-                                "TEMPLATE_THEME" => $arParams["TEMPLATE_THEME"],
-                                'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
-                                'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-                                "SEF_MODE" => $arParams["SEF_MODE"],
-                                "SEF_RULE" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["smart_filter"],
-                                "SMART_FILTER_PATH" => $arResult["VARIABLES"]["SMART_FILTER_PATH"],
-                                "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
-                                "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
-                            ),
-                            $component,
-                            array('HIDE_ICONS' => 'Y')
-                        );?>
+<?= Html::beginTag('div', [
+    'id' => $sTemplateId,
+    'class' => [
+        'ns-bitrix',
+        'c-catalog',
+        'c-catalog-catalog-1',
+        'p-section'
+    ],
+    'data' => [
+        'layout' => $arParams['SECTIONS_LAYOUT']
+    ]
+]) ?>
+    <div class="catalog-wrapper intec-content intec-content-visible">
+        <div class="catalog-wrapper-2 intec-content-wrapper">
+            <?php if ($sLayout === '2') { ?>
+                <?php $APPLICATION->ShowViewContent($sTemplateId.'-description-top') ?>
+                <?php if ($arSections['SHOW']) { ?>
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.section.list',
+                        $arSections['TEMPLATE'],
+                        $arSections['PARAMETERS'],
+                        $component
+                    ) ?>
+                <?php } ?>
+                <?php if ($arTags['POSITION']['DESKTOP'] == 'top') { ?>
+                    <?= Html::beginTag('div', [
+                        'class' => [
+                            'catalog-menu-tags',
+                            'desktop'
+                        ],
+                        'data' => [
+                            'position' => 'top',
+                            'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                        ]
+                    ]) ?>
+                        <?php $arTags['SHOWED']['DESKTOP'] = true ?>
+                        <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags') ?>
+                    <?= Html::endTag('div') ?>
+                <?php } elseif ($arTags['SHOW']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'top') { ?>
+                    <div class="catalog-menu-tags mobile" data-position="top">
+                        <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                        <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
                     </div>
                 <?php } ?>
             <?php } ?>
-
-            <?php if ($bMenuDisplay) { ?>
-                <div class="intec-section-menu">
-                    <?php $APPLICATION->IncludeComponent("bitrix:menu", "vertical", array(
-                            'IBLOCK_TYPE' => $arParams['IBLOCK_TYPE'],
-                            'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-                            'PROPERTY_IMAGE' => $arParams['PROPERTY_IMAGE'],
-                            'PROPERTY_SHOW_HEADER_SUBMENU' => $arParams['SHOW_HEADER_SUBMENU'],
-                            'ROOT_MENU_TYPE' => $arParams['MENU_TYPE_ROOT'],
-                            'MENU_CACHE_TYPE' => 'N',
-                            "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_CACHE_GET_VARS" => array(
-                            ),
-                            "MAX_LEVEL" => $arParams['MENU_MAX_LEVEL'],
-                            "CHILD_MENU_TYPE" => $arParams['MENU_TYPE_CHILD'],
-                            "USE_EXT" => "Y",
-                            "DELAY" => "N",
-                            "ALLOW_MULTI_SELECT" => "N",
-                            "HIDE_CATALOG" => "Y",
-                            "COUNT_ITEMS_CATALOG" => "8",
-                            'TYPE_SUBMENU' => $arParams['MENU_VIEW']
-                        ),
-                        $component
-                    ); ?>
-                </div>
-            <?php } ?>
-        </div><!--left_col_index-->
-
-        <div class="intec-content-right">
-            <div class="intec-content-right-wrapper">
-                <?php
-                $arViews = array('tile', 'tile2', 'text', 'list');
-                $sView = ArrayHelper::getValue($arParams, 'SECTION_VIEW');
-
-                if ($sView == 'settings' && !empty($oProperties)) {
-                    switch ($oProperties->get('template_catalog_section')) {
-                        case 'list':
-                            $sView = 'text';
-                            $arParams['SECTION_CHILDREN_USE'] = 'Y';
-                            $arParams['SECTION_VIEW_DESCRIPTION_SHOW'] = 'Y';
-                            break;
-                        case 'list_2':
-                            $sView = 'list';
-                            $arParams['SECTION_CHILDREN_USE'] = 'Y';
-                            $arParams['SECTION_VIEW_DESCRIPTION_SHOW'] = 'Y';
-                            break;
-                        case 'tile':
-                            $sView = 'tile';
-                            $arParams['SECTION_CHILDREN_USE'] = 'Y';
-                            break;
-                        case 'tile_2':
-                            $sView = 'tile2';
-                            $arParams['SECTION_CHILDREN_USE'] = 'N';
-                            break;
-                    }
-                }
-                $sView = ArrayHelper::fromRange($arViews, $sView);
-
-                if (ArrayHelper::isIn($sView, array('list', 'text'))) {
-                    $arParams['SECTION_ROW_COUNT'] = 2;
-                }
-                ?>
-                <div class="intec-section-list">
-                    <?$APPLICATION->IncludeComponent(
-                        "bitrix:catalog.section.list",
-                        $sView,
-                        Array(
-                            "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                            "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                            "SECTION_ID" => $arResult["VARIABLES"]["SECTION_ID"],
-                            "SECTION_CODE" => $arResult["VARIABLES"]["SECTION_CODE"],
-                            "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                            "CACHE_TIME" => $arParams["CACHE_TIME"],
-                            "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                            "COUNT_ELEMENTS" => 3,
-                            "TOP_DEPTH" => $arParams["SECTION_TOP_DEPTH"],
-                            "SECTION_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["section"],
-                            "ADD_SECTIONS_CHAIN" => (isset($arParams["ADD_SECTIONS_CHAIN"]) ? $arParams["ADD_SECTIONS_CHAIN"] : ''),
-                            "GRID_CATALOG_SECTIONS_COUNT" => $arParams['SECTION_ROW_COUNT'],
-                            'USE_SUBSECTIONS' => $arParams['SECTION_CHILDREN_USE'],
-                            'COUNT_SUBSECTIONS' => $arParams['SECTION_CHILDREN_COUNT'],
-                            'COUNT_ELEMENTS' => $arParams['SECTION_COUNT_ELEMENTS'],
-                            'SECTIONS_DISPLAY_DESCRIPTION' => 'Y'
-                        ),
-                        $component
-                    );?>
-                </div>
-
-            <?if ($elements):?>
-                <?if (!empty($arParams['LIST_SORT_PRICE_CODE']) && (int)$arParams['LIST_SORT_PRICE_CODE'] > 0) {
-                    $sortPriceCode = $arParams['LIST_SORT_PRICE_CODE'];
-                } else {
-                    $sortPriceCode = 1;
-                }
-
-                $sort=$_GET['sort'];
-
-                if(empty($sort)){
-                    $sort=null;
-                    $sort_p=null;
-                }
-
-                if ($_GET['sort']=="name") {
-                    $sort='name';
-                    $sort_p='name';
-                }
-                if ($_GET['sort']=="price") {
-                    $sort= $prefixPriceSort.$sortPriceCode;
-                    $sort_p='price';
-                }
-                if ($_GET['sort']=="pop") {
-                    $sort='show_counter';
-                    $sort_p='pop';
-                }
-
-                $pView = ArrayHelper::getValue($arParams, 'LIST_VIEW');
-                $columns = $arParams["LINE_ELEMENT_COUNT"];
-
-                if ($pView == 'settings' && !empty($oProperties)) {
-                    $view = $oProperties->get('default_products_view');
-
-                    if ($view == 'tile.2') {
-                        $view = 'tile';
-                        $columns = 4;
-                    }
-                }
-
-                $viewValues = array('text', 'list', 'tile');
-                if (isset($_COOKIE['view'])) {
-                    $view = $_COOKIE['view'];
-                }
-
-                if (isset($_GET['view']) && in_array($_GET['view'], $viewValues)) {
-                    $view = $_GET['view'];
-                    setcookie("view", $view, time()+60*60*24*7, '/');
-                }
-
-                if (empty($view) || !in_array($view, $viewValues)) {
-                    $view = 'tile';
-                }
-
-                $order = "desc";
-                if (isset($_GET['order'])) {
-                    if ($_GET['order']=='asc') {
-                        $order = "asc";
-                    }
-                    if ($_GET['order']=='desc') {
-                        $order = "desc";
-                    }
-                }
-
-                if ($order=="desc") {
-                    $classAngle = 'up';
-                    $order_p = "asc";
-                } else {
-                    $classAngle = 'down';
-                    $order_p = "desc";
-                }
-                ?>
-                <div class="intec-panel-sort">
-                    <div class="intec-section-filter-mobile-wrap">
-                        <span class="intec-section-filter-mobile-button intec-button intec-button-w-icon intec-button-cl-common intec-button-r-3 intec-button-s-2">
-                            <i class="glyph-icon-filter" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                    <div class="intec-sort">
-                        <div class="sort-values">
-                            <div class="sort-value<?= $sort_p=='pop' ? ' sort-state-active' : '' ?>">
-                                <a rel="nofollow" href="<?= $APPLICATION->GetCurPageParam('sort=pop&order='.$order_p, array('sort','order'), false) ?>">
-                                    <span class="sort-value-desktop"><?=GetMessage("SECTION_SORT_POPUL")?></span>
-                                    <span class="sort-value-mobile"><i class="far fa-star" aria-hidden="true"></i></span>
-                                    <span class="sort-value-arrow"><i class="far fa-angle-<?=$classAngle?>" aria-hidden="true"></i></span>
-                                </a>
-                            </div>
-                            <div class="sort-value<?= $sort_p=='name' ? ' sort-state-active' : '' ?>">
-                                <a rel="nofollow" href="<?= $APPLICATION->GetCurPageParam('sort=name&order='.$order_p, array('sort','order'), false) ?>">
-                                    <span class="sort-value-desktop"><?=GetMessage("SECTION_SORT_NAME")?></span>
-                                    <span><i class="glyph-icon-filter" aria-hidden="true"></i></span>
-                                    <span class="sort-value-mobile">A</span>
-                                    <span class="sort-value-arrow"><i class="far fa-angle-<?=$classAngle?>" aria-hidden="true"></i></span>
-                                </a>
-                            </div>
-                            <div class="sort-value<?= $sort_p=='price' ? ' sort-state-active' : '' ?>">
-                                <a rel="nofollow" href="<?= $APPLICATION->GetCurPageParam('sort=price&order='.$order_p, array('sort','order'), false) ?>">
-                                    <span class="sort-value-desktop"><?=GetMessage("SECTION_SORT_PRICE")?></span>
-                                    <span class="sort-value-mobile"><i class="fal fa-ruble-sign" aria-hidden="true"></i></span>
-                                    <span class="sort-value-arrow"><i class="far fa-angle-<?=$classAngle?>" aria-hidden="true"></i></span>
-                                </a>
-                            </div>
+            <?php if ($arFilter['SHOW'] && $arFilter['TYPE'] === 'horizontal') { ?>
+                <?php if ($sLayout === '1') { ?>
+                    <?php if ($arTags['POSITION']['DESKTOP'] == 'top') { ?>
+                        <?= Html::beginTag('div', [
+                            'class' => [
+                                'catalog-menu-tags',
+                                'desktop'
+                            ],
+                            'data' => [
+                                'position' => 'top',
+                                'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                            ]
+                        ]) ?>
+                            <?php $arTags['SHOWED']['DESKTOP'] = true ?>
+                            <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags') ?>
+                        <?= Html::endTag('div') ?>
+                    <?php } elseif ($arTags['SHOW']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'top') { ?>
+                        <div class="catalog-menu-tags mobile" data-position="top">
+                            <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                            <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
                         </div>
-                        <div class="clear"></div>
+                    <?php } ?>
+                <?php } ?>
+                    <!--noindex-->
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.smart.filter',
+                        $arFilter['TEMPLATE'],
+                        $arFilter['PARAMETERS'],
+                        $component
+                    ) ?>
+                    <!--/noindex-->
+            <?php } ?>
+            <?= Html::beginTag('div', [
+                'class' => 'catalog-content',
+                'data' => [
+                    'role' => !$arColumns['SHOW'] ? 'catalog.content' : null
+                ]
+            ]) ?>
+                <?php if ($arColumns['SHOW']) { ?>
+                    <div class="catalog-content-left intec-content-left">
+                        <?php if ($arFilter['SHOW'] && $arFilter['TYPE'] === 'vertical') { ?>
+                            <!--noindex-->
+                            <?php $APPLICATION->IncludeComponent(
+                                'bitrix:catalog.smart.filter',
+                                $arFilter['TEMPLATE'],
+                                $arFilter['PARAMETERS'],
+                                $component
+                            ) ?>
+                            <!--/noindex-->
+                        <?php } ?>
+                        <?php if ($arMenu['SHOW']) { ?>
+                            <div class="catalog-menu">
+                                <?php $APPLICATION->IncludeComponent(
+                                    'bitrix:menu',
+                                    $arMenu['TEMPLATE'],
+                                    $arMenu['PARAMETERS'],
+                                    $component
+                                ) ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($arTags['POSITION']['DESKTOP'] == 'menu' && !$arTags['SHOWED']['DESKTOP']) { ?>
+                            <?= Html::beginTag('div', [
+                                'class' => [
+                                    'catalog-menu-tags',
+                                    'desktop'
+                                ],
+                                'data' => [
+                                    'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                                ]
+                            ]) ?>
+                                <?php $arTags['SHOWED']['DESKTOP'] = true; ?>
+                                <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags'); ?>
+                            <?= Html::endTag('div') ?>
+                        <?php } elseif ($arTags['SHOW']['MOBILE'] && !$arTags['SHOWED']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'menu') { ?>
+                            <div class="catalog-menu-tags mobile">
+                                <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                                <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
+                            </div>
+                        <?php } ?>
                     </div>
-                    <div class="intec-panel-view">
-                        <div class="intec-aligner"></div>
-                        <div class="intec-views">
-                            <?php foreach ($viewValues as $v) { ?>
-                                <a rel="nofollow"
-                                   href="<?=$APPLICATION->GetCurPageParam('view='.$v, array('view'), false)?>"
-                                   class="text <?= $view==$v ? 'view-active' : '' ?>">
-                                    <i class="glyph-icon-view_<?= $v ?>" aria-hidden="true"></i>
-                                </a>
+                    <div class="catalog-content-right intec-content-right">
+                        <div class="catalog-content-right-wrapper intec-content-right-wrapper" data-role="catalog.content">
+                <?php } ?>
+                <?php if ($sLayout === '1') { ?>
+                    <?php if (!$arTags['SHOWED']['DESKTOP'] && $arTags['POSITION']['DESKTOP'] == 'top') { ?>
+                        <?= Html::beginTag('div', [
+                            'class' => [
+                                'catalog-menu-tags',
+                                'desktop'
+                            ],
+                            'data' => [
+                                'position' => 'top',
+                                'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                            ]
+                        ]) ?>
+                            <?php $arTags['SHOWED']['DESKTOP'] = true ?>
+                            <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags') ?>
+                        <?= Html::endTag('div') ?>
+                    <?php } elseif ($arTags['SHOW']['MOBILE'] && !$arTags['SHOWED']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'top') { ?>
+                        <div class="catalog-menu-tags mobile">
+                            <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                            <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+                <?php if ($bIsAjax) $APPLICATION->RestartBuffer() ?>
+                <?php if ($sLayout === '1') { ?>
+                    <?php $APPLICATION->ShowViewContent($sTemplateId.'-description-top') ?>
+                    <?php if ($arSections['SHOW']) { ?>
+                        <?php $APPLICATION->IncludeComponent(
+                            'bitrix:catalog.section.list',
+                            $arSections['TEMPLATE'],
+                            $arSections['PARAMETERS'],
+                            $component
+                        ) ?>
+                    <?php } ?>
+                <?php } ?>
+                <?php if ($arElements['SHOW']) { ?>
+                    <?php include(__DIR__.'/parts/panel.php') ?>
+                    <?php include(__DIR__.'/parts/preloader.php') ?>
+                    <?php
+                        foreach ($arSort['PROPERTIES'] as $arSortProperty) {
+                            if ($arSortProperty['ACTIVE']) {
+                                $arElements['PARAMETERS']['ELEMENT_SORT_FIELD'] = $arSortProperty['FIELD'];
+                                $arElements['PARAMETERS']['ELEMENT_SORT_ORDER'] = $arSort['ORDER'];
+
+                                break;
+                            }
+                        }
+
+                        unset($arSortProperty);
+                    ?>
+                <?php } ?>
+                <?php if ($arElements['SHOW'] || !empty($arElements['TEMPLATE'])) { ?>
+                    <?php $APPLICATION->IncludeComponent(
+                        'bitrix:catalog.section',
+                        $arElements['TEMPLATE'],
+                        $arElements['PARAMETERS'],
+                        $component
+                    ) ?>
+                    <?php if ($sLayout === '1') { ?>
+                        <?php if (!$arTags['SHOWED']['DESKTOP'] && $arTags['POSITION']['DESKTOP'] == 'bottom') { ?>
+                            <?= Html::beginTag('div', [
+                                'class' => [
+                                    'catalog-menu-tags',
+                                    'desktop'
+                                ],
+                                'data' => [
+                                    'position' => 'top',
+                                    'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                                ]
+                            ]) ?>
+                                <?php $arTags['SHOWED']['DESKTOP'] = true ?>
+                                <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags') ?>
+                            <?= Html::endTag('div') ?>
+                        <?php } elseif ($arTags['SHOW']['MOBILE'] && !$arTags['SHOWED']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'bottom') { ?>
+                            <div class="catalog-menu-tags mobile">
+                                <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                                <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if ($arSectionsExtending['SHOW']) { ?>
+                        <?php $arSectionsExtending['RESULT'] = $APPLICATION->IncludeComponent('intec.seo:iblocks.section.extend.filter', '', [
+                            'IBLOCK_ID' => $arIBlock['ID'],
+                            'SECTION_ID' => $arSection['ID'],
+                            'SECTIONS_ID' => ArrayHelper::getValue($arSection, $arSectionsExtending['PROPERTY']),
+                            'HAS_COUNT' => $arElements['COUNT'],
+                            'CURRENT_URL' => $_SERVER['REQUEST_URI'],
+                            'FILTER_NAME' => 'arCatalogSectionsExtendingFilter',
+                            'INCLUDE_SUBSECTIONS' => 'Y',
+                            'CACHE_TYPE' => $arParams['CACHE_TYPE'],
+                            'CACHE_TIME' => $arParams['CACHE_TIME']
+                        ], $component) ?>
+                        <?php if (!empty($arSectionsExtending['RESULT']) && !empty($arSectionsExtending['RESULT']['FILTER'])) { ?>
+                            <div class="catalog-section-extending">
+                                <?php $arSectionsExtending['PARAMETERS']['ELEMENT_SORT_ORDER'] = $arSectionsExtending['RESULT']['FILTER']['ID']; ?>
+                                <?php $arSectionsExtending['PARAMETERS']['PAGE_ELEMENT_COUNT'] = count($arSectionsExtending['RESULT']['FILTER']['ID']); ?>
+                                <?php if (!empty($arSectionsExtending['TITLE']) || Type::isNumeric($arSectionsExtending['TITLE'])) { ?>
+                                    <div class="catalog-title">
+                                        <?= $arSectionsExtending['TITLE'] ?>
+                                    </div>
+                                <?php } ?>
+                                <?php $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.section',
+                                    $arSectionsExtending['TEMPLATE'],
+                                    $arSectionsExtending['PARAMETERS'],
+                                    $component
+                                ) ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
+                <?php if ($arResult['ADDITIONAL']['ARTICLES']['SHOW']) { ?>
+                    <div class="catalog-additional">
+                        <?php include(__DIR__.'/parts/articles.php') ?>
+                    </div>
+                <?php } ?>
+                <?php if ($bSeo) { ?>
+                    <?php $APPLICATION->IncludeComponent('intec.seo:iblocks.metadata.loader', '', [
+                        'IBLOCK_ID' => $arIBlock['ID'],
+                        'SECTION_ID' => $arSection['ID'],
+                        'TYPE' => 'section',
+                        'MODE' => 'single',
+                        'METADATA_SET' => 'Y',
+                        'CACHE_TYPE' => $arParams['CACHE_TYPE'],
+                        'CACHE_TIME' => $arParams['CACHE_TIME']
+                    ], $component) ?>
+                    <?php $arArticlesExtending['RESULT'] = $APPLICATION->IncludeComponent('intec.seo:iblocks.articles.extend.filter', '', [
+                        'IBLOCK_ID' => $arIBlock['ID'],
+                        'SECTION_ID' => $arSection['ID'],
+                        'ELEMENT_ID' => null,
+                        'FILTER_MODE' => 'single',
+                        'QUANTITY' => $arArticlesExtending['QUANTITY'],
+                        'CURRENT_URL' => $_SERVER['REQUEST_URI'],
+                        'FILTER_NAME' => 'arCatalogArticlesExtendingFilter',
+                        'INCLUDE_SUBSECTIONS' => 'Y',
+                        'CACHE_TYPE' => $arParams['CACHE_TYPE'],
+                        'CACHE_TIME' => $arParams['CACHE_TIME']
+                    ], $component) ?>
+                    <?php if (!empty($arArticlesExtending['RESULT']) && !empty($arArticlesExtending['RESULT']['FILTER'])) { ?>
+                        <?php
+                            if ($arArticlesExtending['RESULT']['FILTER_MODE_SINGLE'])
+                                $arArticlesExtending['PARAMETERS']['IBLOCK_ID'] = $arArticlesExtending['RESULT']['FILTER']['IBLOCK_ID'];
+
+                            $arArticlesExtending['PARAMETERS']['SORT_ORDER1'] = 'ASC';
+                            $arArticlesExtending['PARAMETERS']['NEWS_COUNT'] = count($arArticlesExtending['RESULT']['FILTER']['ID']);
+                        ?>
+                        <div class="catalog-section-extending">
+                            <?php if (!empty($arArticlesExtending['TITLE']) || Type::isNumeric($arArticlesExtending['TITLE'])) { ?>
+                                <div class="catalog-title">
+                                    <?= $arArticlesExtending['TITLE'] ?>
+                                </div>
+                            <?php } ?>
+                            <?php $APPLICATION->IncludeComponent(
+                                'bitrix:news.list',
+                                $arArticlesExtending['TEMPLATE'],
+                                $arArticlesExtending['PARAMETERS'],
+                                $component
+                            ) ?>
+                        </div>
+                    <?php } ?>
+                    <?php $arSeo = $APPLICATION->IncludeComponent('intec.seo:filter.meta', '', [
+                        'IBLOCK_ID' => $arIBlock['ID'],
+                        'SECTION_ID' => $arSection['ID'],
+                        'CACHE_TYPE' => $arParams['CACHE_TYPE'],
+                        'CACHE_TIME' => $arParams['CACHE_TIME']
+                    ], $component) ?>
+                    <?php if ($arTags['USE']) {
+                        $this->SetViewTarget($sTemplateId.'-tags');
+
+                        $APPLICATION->IncludeComponent('intec.seo:filter.tags', '',
+                            $arTags['PARAMETERS'], $component);
+
+                        $this->EndViewTarget();
+                    } ?>
+                <?php } ?>
+                <?php $APPLICATION->ShowViewContent($sTemplateId.'-description-bottom') ?>
+                <?php if (!empty($arSeo) && !empty($arSeo['META']['descriptionTop']) || $arDescription['SHOW'] && $arDescription['POSITION'] === 'top') { ?>
+                    <?php $this->SetViewTarget($sTemplateId.'-description-top') ?>
+                    <div class="<?= Html::cssClassFromArray([
+                        'catalog-description',
+                        'catalog-description-top',
+                        'intec-ui-markup-text'
+                    ]) ?>"><?= !empty($arSeo) && !empty($arSeo['META']['descriptionTop']) ? $arSeo['META']['descriptionTop'] : $arDescription['VALUE'] ?></div>
+                    <?php $this->EndViewTarget() ?>
+                <?php } ?>
+                <?php if (!empty($arSeo) && !empty($arSeo['META']['descriptionBottom']) || $arDescription['SHOW'] && $arDescription['POSITION'] === 'bottom') { ?>
+                    <?php $this->SetViewTarget($sTemplateId.'-description-bottom') ?>
+                    <div class="<?= Html::cssClassFromArray([
+                        'catalog-description',
+                        'catalog-description-bottom',
+                        'intec-ui-markup-text'
+                    ]) ?>"><?= !empty($arSeo) && !empty($arSeo['META']['descriptionBottom']) ? $arSeo['META']['descriptionBottom'] : $arDescription['VALUE'] ?></div>
+                    <?php $this->EndViewTarget() ?>
+                <?php } ?>
+                <?php if ($bIsAjax) exit() ?>
+                <?php if ($arColumns['SHOW']) { ?>
+                            <?php if ($arInterestProducts['SHOW'] && $arInterestProducts['POSITION'] == 'content') { ?>
+                                <div class="catalog-section-products-interest-container">
+                                    <div class="catalog-section-products-interest-block-title">
+                                        <?= $arInterestProducts['TITLE'] ?>
+                                    </div>
+                                    <div class="catalog-section-products-interest-block-content">
+                                        <?php $APPLICATION->IncludeComponent(
+                                            'bitrix:catalog.section',
+                                            'products.small.6',
+                                            $arInterestProductsProperties,
+                                            $component
+                                        ) ?>
+                                    </div>
+                                </div>
                             <?php } ?>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <div class="intec-section-filter-mobile">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:catalog.smart.filter",
-                            'mobile',
-                            Array(
-                                "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                                "SECTION_ID" => $arCurSection['ID'],
-                                "FILTER_NAME" => $arParams["FILTER_NAME"],
-                                "PRICE_CODE" => $arParams["PRICE_CODE"],
-                                "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                                "CACHE_TIME" => $arParams["CACHE_TIME"],
-                                "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                                "SAVE_IN_SESSION" => "N",
-                                "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
-                                "XML_EXPORT" => "Y",
-                                "SECTION_TITLE" => "NAME",
-                                "SECTION_DESCRIPTION" => "DESCRIPTION",
-                                'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
-                                "TEMPLATE_THEME" => $arParams["TEMPLATE_THEME"],
-                                'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
-                                'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-                                "SEF_MODE" => $arParams["SEF_MODE"],
-                                "SEF_RULE" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["smart_filter"],
-                                "SMART_FILTER_PATH" => $arResult["VARIABLES"]["SMART_FILTER_PATH"],
-                                "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
-                                "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
-                            ),
-                            $component,
-                            array('HIDE_ICONS' => 'Y')
-                        ); ?>
+                    <div class="intec-ui-clearfix"></div>
+                <?php } ?>
+                <?php if ($arTags['POSITION']['DESKTOP'] == 'bottom' && !$arTags['SHOWED']['DESKTOP']) { ?>
+                    <?= Html::beginTag('div', [
+                        'class' => [
+                            'catalog-menu-tags',
+                            'desktop'
+                        ],
+                        'data' => [
+                            'position' => 'top',
+                            'mobile-use' => $arTags['SHOW']['MOBILE'] ? 'true' : 'false'
+                        ]
+                    ]) ?>
+                        <?php $arTags['SHOWED']['DESKTOP'] = true ?>
+                        <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags') ?>
+                    <?= Html::endTag('div') ?>
+                <?php } elseif ($arTags['SHOW']['MOBILE'] && !$arTags['SHOWED']['MOBILE'] && $arTags['POSITION']['MOBILE'] == 'bottom') { ?>
+                    <div class="catalog-menu-tags mobile">
+                        <?php $arTags['SHOWED']['MOBILE'] = true ?>
+                        <?php $APPLICATION->ShowViewContent($sTemplateId.'-tags-mobile') ?>
                     </div>
-                </div>
-            <?endif;?>
-
-            <? $APPLICATION->IncludeComponent(
-                "bitrix:catalog.section",
-                $view,
-                Array(
-                    "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                    "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                    "ELEMENT_SORT_FIELD" => !empty($sort)?$sort:$arParams['ELEMENT_SORT_FIELD'],
-                    "ELEMENT_SORT_ORDER" => !empty($sort)?$order:$arParams['ELEMENT_SORT_ORDER'],
-                    "ELEMENT_SORT_FIELD2" => $arParams["ELEMENT_SORT_FIELD2"],
-                    "ELEMENT_SORT_ORDER2" => $arParams["ELEMENT_SORT_ORDER2"],
-                    "PROPERTY_CODE" => $arParams["LIST_PROPERTY_CODE"],
-                    "DETAIL_PROPERTY_CODE" => $arParams["DETAIL_PROPERTY_CODE"],
-                    "META_KEYWORDS" => $arParams["LIST_META_KEYWORDS"],
-                    "META_DESCRIPTION" => $arParams["LIST_META_DESCRIPTION"],
-                    "BROWSER_TITLE" => $arParams["LIST_BROWSER_TITLE"],
-                    "INCLUDE_SUBSECTIONS" => $arParams["INCLUDE_SUBSECTIONS"],
-                    "BASKET_URL" => $arParams["BASKET_URL"],
-                    "ACTION_VARIABLE" => $arParams["ACTION_VARIABLE"],
-                    "PRODUCT_ID_VARIABLE" => $arParams["PRODUCT_ID_VARIABLE"],
-                    "SECTION_ID_VARIABLE" => $arParams["SECTION_ID_VARIABLE"],
-                    "PRODUCT_QUANTITY_VARIABLE" => $arParams["PRODUCT_QUANTITY_VARIABLE"],
-                    "PRODUCT_PROPS_VARIABLE" => $arParams["PRODUCT_PROPS_VARIABLE"],
-                    "FILTER_NAME" => $arParams["FILTER_NAME"],
-                    "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                    "CACHE_TIME" => $arParams["CACHE_TIME"],
-                    "CACHE_FILTER" => $arParams["CACHE_FILTER"],
-                    "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                    "SET_TITLE" => $arParams["SET_TITLE"],
-                    "SET_STATUS_404" => $arParams["SET_STATUS_404"],
-                    "DISPLAY_COMPARE" => $arParams["USE_COMPARE"],
-                    "PAGE_ELEMENT_COUNT" => $arParams["PAGE_ELEMENT_COUNT"],
-                    "LINE_ELEMENT_COUNT" => $columns,
-                    'DISPLAY_PREVIEW' => $arParams['LIST_DESCRIPTION_SHOW'],
-                    'DISPLAY_PROPERTIES' => $arParams['LIST_PROPERTIES_SHOW'],
-                    "PRICE_CODE" => $arParams["PRICE_CODE"],
-                    "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
-                    "DETAIL_USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
-                    "SHOW_PRICE_COUNT" => $arParams["SHOW_PRICE_COUNT"],
-
-                    "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
-                    "PRICE_VAT_SHOW_VALUE" => $arParams["PRICE_VAT_SHOW_VALUE"],
-                    "USE_PRODUCT_QUANTITY" => $arParams['DETAIL_COUNTER_SHOW'],
-                    "QUANTITY_FLOAT" => $arParams["QUANTITY_FLOAT"],
-                    "PRODUCT_PROPERTIES" => $arParams["PRODUCT_PROPERTIES"],
-
-                    "PROPERTY_BRAND" => $arParams["PROPERTY_BRAND"],
-                    "PROPERTY_IS_NEW" => $arParams["PROPERTY_IS_NEW"],
-                    "PROPERTY_IS_POPULAR" => $arParams["PROPERTY_IS_POPULAR"],
-                    "PROPERTY_IS_RECOMMENDATION" => $arParams["PROPERTY_IS_RECOMMENDATION"],
-                    "PROPERTY_MORE_PHOTO" => $arParams["PROPERTY_PICTURES"],
-                    "OFFERS_PROPERTY_MORE_PHOTO" => $arParams["OFFERS_PROPERTY_PICTURES"],
-
-                    'USE_FAST_ORDER' => $arParams['FAST_ORDER_USE'],
-                    'FAST_ORDER_TEMPLATE' => $arParams['FAST_ORDER_TEMPLATE'],
-                    'FAST_ORDER_TITLE' => $arParams['FAST_ORDER_TITLE'],
-                    'FAST_ORDER_SEND_BUTTON' => $arParams['FAST_ORDER_BUTTON'],
-                    'FAST_ORDER_SHOW_COMMENT' => $arParams['FAST_ORDER_COMMENT_SHOW'],
-                    'FAST_ORDER_PRICE_TYPE' => $arParams['FAST_ORDER_PRICE_TYPE'],
-                    'FAST_ORDER_DELIVERY_TYPE' => $arParams['FAST_ORDER_DELIVERY'],
-                    'FAST_ORDER_PAYMET_TYPE' => $arParams['FAST_ORDER_PAYMENT'],
-                    'FAST_ORDER_PAYER_TYPE' => $arParams['FAST_ORDER_PAYER'],
-                    'FAST_ORDER_SHOW_PROPERTIES' => $arParams['FAST_ORDER_PROPERTIES'],
-                    'FAST_ORDER_PROPERTY_PHONE' => $arParams['FAST_ORDER_PROPERTY_PHONE'],
-
-                    "DISPLAY_TOP_PAGER" => $arParams["DISPLAY_TOP_PAGER"],
-                    "DISPLAY_BOTTOM_PAGER" => $arParams["DISPLAY_BOTTOM_PAGER"],
-                    "PAGER_TITLE" => $arParams["PAGER_TITLE"],
-                    "PAGER_SHOW_ALWAYS" => $arParams["PAGER_SHOW_ALWAYS"],
-                    "PAGER_TEMPLATE" => $arParams["PAGER_TEMPLATE"],
-                    "PAGER_DESC_NUMBERING" => $arParams["PAGER_DESC_NUMBERING"],
-                    "PAGER_DESC_NUMBERING_CACHE_TIME" => $arParams["PAGER_DESC_NUMBERING_CACHE_TIME"],
-                    "PAGER_SHOW_ALL" => $arParams["PAGER_SHOW_ALL"],
-                    "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
-                    "OFFERS_FIELD_CODE" => $arParams["LIST_OFFERS_FIELD_CODE"],
-                    "OFFERS_PROPERTY_CODE" => $arParams["LIST_OFFERS_PROPERTY_CODE"],
-                    "OFFERS_SORT_FIELD" => $arParams["OFFERS_SORT_FIELD"],
-                    "OFFERS_SORT_ORDER" => $arParams["OFFERS_SORT_ORDER"],
-                    "OFFERS_SORT_FIELD2" => $arParams["OFFERS_SORT_FIELD2"],
-                    "OFFERS_SORT_ORDER2" => $arParams["OFFERS_SORT_ORDER2"],
-                    "OFFERS_LIMIT" => $arParams["LIST_OFFERS_LIMIT"],
-                    "SECTION_ID" => $arResult["VARIABLES"]["SECTION_ID"],
-                    "SECTION_CODE" => $arResult["VARIABLES"]["SECTION_CODE"],
-                    "SECTION_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["section"],
-                    "DETAIL_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["element"],
-                    'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
-                    'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-                    'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
-                    "COMPARE_NAME" => $arParams["COMPARE_NAME"],
-                    'USE_COUNT_PRODUCT' => $arParams['LIST_QUANTITY_SHOW'],
-                    "LAZY_LOAD" => $arParams["LAZY_LOAD"],
-                    "MESS_BTN_LAZY_LOAD" => $arParams["MESS_BTN_LAZY_LOAD"],
-                    'SHOW_QUICK_VIEW' => $arParams["LIST_QUICK_VIEW_USE"],
-                    'USE_DELIMITER_ELEMENT' => $arParams['USE_DELIMITER_ELEMENT'],
-                    "USE_MAIN_ELEMENT_SECTION" => $arParams["USE_MAIN_ELEMENT_SECTION"],
-                    'SHOW_QUANTITY_COUNTER' => $arParams['LIST_COUNTER_SHOW'],
-                    'ORDER_PRODUCT_WEB_FORM' => $arParams['PRODUCT_FORM_ID'],
-                    'PROPERTY_FORM_ORDER_PRODUCT' => $arParams['PRODUCT_FORM_PROPERTY_PRODUCT'],
-                    'USE_BASKET' => $arParams['BASKET_USE'],
-                    'USE_COMMON_CURRENCY' => $arParams['CURRENCY_USE'],
-                    'CURRENCY' => $arParams['CURRENCY_CODE'],
-                    'CONSENT_URL' => $arParams['CONSENT_URL'],
-                    'COMPARE_PATH' => $arResult['FOLDER'].$arResult['URL_TEMPLATES']['compare'],
-                    'OFFER_TREE_PROPS' => $arParams['OFFER_TREE_PROPS'],
-                    'MESS_PRICE_RANGES_TITLE' => $arParams['MESS_PRICE_RANGES_TITLE'],
-                    'WIDE' => 'N'
-                ),
-                $component
-            );
-            ?>
-            <?php
-            $resSection = CIBlockSection::GetByID($arResult["VARIABLES"]["SECTION_ID"]);
-            if ($arrSection = $resSection->GetNext())
-                $sectionDescription = $arrSection['DESCRIPTION'];
-            if (!empty($sectionDescription)) { ?>
-                <div class="intec-section-description"><?= $sectionDescription ?></div>
-            <?php } ?>
-
-            </div>
-            <div class="clearfix"></div>
+                <?php } ?>
+                <?php if ($arInterestProducts['SHOW'] && $arInterestProducts['POSITION'] == 'footer') { ?>
+                    <div class="catalog-section-products-interest-container">
+                        <div class="catalog-section-products-interest-block-title">
+                            <?= $arInterestProducts['TITLE'] ?>
+                        </div>
+                        <div class="catalog-section-products-interest-block-content">
+                            <?php $APPLICATION->IncludeComponent(
+                                'bitrix:catalog.section',
+                                'products.small.6',
+                                $arInterestProductsProperties,
+                                $component
+                            ) ?>
+                        </div>
+                    </div>
+                <?php } ?>
+            <?= Html::endTag('div') ?>
         </div>
     </div>
-</div>
+    <script type="text/javascript">
+        template.load(function (data) {
+            var app = this;
+            var $ = this.getLibrary('$');
 
-<script>
+            var root = data.nodes;
+            var filter = $('[data-role="catalog.filter"]', root);
+            var content = $('[data-role="catalog.content"]', root);
 
-    var filterSelecterDesktop;
-    var filterSelecterMobile;
-    var filterDesktopCode;
-    var filterMobileCode;
+            filter.state = false;
+            filter.button = $('[data-role="catalog.filter.button"]', root);
+            filter.button.on('click', function () {
+                if (filter.state) {
+                    filter.hide();
+                } else {
+                    filter.show();
+                }
 
-    function windowSizeFilter(){
-        if ($(window).width() <= '720'){
-            if ($.trim(filterSelecterMobile.html()) == '') {
-                filterSelecterMobile.html(filterMobileCode);
+                filter.state = !filter.state;
+            });
+
+            content.refresh = function (url) {
+                var panel = $('[data-role="catalog.panel"]', content);
+                var preloader = $('[data-role="catalog.preloader"]', content);
+
+                if (url == null)
+                    url = null;
+
+                $.ajax({
+                    'url': url,
+                    'data': {
+                        'catalog': {
+                            'ajax': 'Y'
+                        }
+                    },
+                    'cache': false,
+                    'beforeSend': function() {
+                        preloader.attr('data-active', 'true');
+                    },
+                    'success': function (response) {
+                        preloader.attr('data-active', 'false');
+                        panel.detach();
+                        filter.detach();
+                        preloader.detach();
+                        content.html(response);
+                        content.find('[data-role="preloader"]').replaceWith(preloader);
+                        content.find('[data-role="catalog.panel"]').replaceWith(panel);
+                        content.find('[data-role="catalog.filter"]').replaceWith(filter);
+                        app.api.basket.update();
+                    }
+                });
+            };
+
+
+            <?php
+            /*Если у каталога включен AJAX, то обновление фильтра происходит через
+             * параметр INSTANT_RELOAD в компоненте фильтра*/
+
+             if ($arFilter['SHOW'] && $arFilter['AJAX'] && $arParams['AJAX_MODE']!='Y') { ?>
+                var updater = function (url) {
+                    if (window.history.enabled || window.history.pushState != null) {
+                        window.history.pushState(null, document.title, url);
+                    } else {
+                        window.location.href = url;
+                    }
+                    content.refresh(url);
+                };
+
+                if (smartFilter && smartFilter.on)
+                    smartFilter.on('refresh', updater);
+
+            <?php } ?>
+        }, {
+            'name': '[Component] bitrix:catalog (catalog.1)',
+            'nodes': <?= JavaScript::toObject('#'.$sTemplateId) ?>,
+            'loader': {
+                'name': 'lazy'
             }
-            filterSelecterDesktop.empty();
-        } else {
-            if ($.trim(filterSelecterDesktop.html()) == '') {
-                filterSelecterDesktop.html(filterDesktopCode);
-            }
-            filterSelecterMobile.empty();
-        }
-    }
-
-    $(window).load(function() {
-        filterSelecterDesktop = $('.intec-section-filter-left');
-        filterSelecterMobile = $('.intec-section-filter-mobile');
-        filterDesktopCode = filterSelecterDesktop.html();
-        filterMobileCode = filterSelecterMobile.html();
-        $(document).on('click', '.intec-section-filter-mobile-wrap', function() {
-            $('.intec-section-filter-mobile').toggle();
         });
-        windowSizeFilter();
-        $(window).on('resize',windowSizeFilter);
-    });
-</script>
+    </script>
+<?= Html::endTag('div') ?>

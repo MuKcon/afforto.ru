@@ -30,7 +30,7 @@ $APPLICATION->SetPageProperty("title", "IT услуги для компаний 
 
 ?><?$APPLICATION->IncludeComponent(
 	"bitrix:catalog", 
-	"services_sm", 
+	"services_sm_v2", 
 	array(
 		"ACTION_VARIABLE" => "action",
 		"ADD_ELEMENT_CHAIN" => "Y",
@@ -725,7 +725,7 @@ $APPLICATION->SetPageProperty("title", "IT услуги для компаний 
 		"USE_PRODUCT_QUANTITY" => "N",
 		"USE_REVIEW" => "N",
 		"USE_STORE" => "N",
-		"COMPONENT_TEMPLATE" => "services_sm",
+		"COMPONENT_TEMPLATE" => "services_sm_v2",
 		"COMPOSITE_FRAME_MODE" => "A",
 		"COMPOSITE_FRAME_TYPE" => "AUTO",
 		"MESSAGES_PER_PAGE" => "10",
@@ -738,7 +738,7 @@ $APPLICATION->SetPageProperty("title", "IT услуги для компаний 
 		"ELEMENTS_LIST_VIEW_DISPLAY_DESCRIPTION" => "N",
 		"ELEMENTS_LIST_VIEW_IMAGES" => "SQUARE",
 		"ELEMENTS_LIST_VIEW_LINE_COUNT" => "2",
-		"cross_nid" => "673a2daa30f06f4b48af30b6",
+		"cross_nid" => "6780f44d8bd995fc67c382b3",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "/services/",
 			"section" => "#SECTION_CODE#/",

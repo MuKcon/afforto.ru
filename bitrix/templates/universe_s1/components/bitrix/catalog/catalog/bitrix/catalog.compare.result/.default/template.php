@@ -21,9 +21,13 @@ $isAjax = ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax_action']) 
     } ?>
     <div class="bx_sort_container">
         <div class="bx_sort_container">
-            <a class="compare-result-clear">
-                <i class="fa fa-times" aria-hidden="true"></i>
-                <?= Loc::getMessage('CATALOG_COMPARE_CLEAR') ?>
+            <a class="compare-result-clear intec-ui intec-ui-control-button intec-ui-mod-transparent intec-ui-mod-round-3 intec-ui-scheme-gray intec-ui-size-2">
+                <span class="intec-ui-part-icon">
+                    <i class="far fa-times" aria-hidden="true"></i>
+                </span>
+                <span class="intec-ui-part-content">
+                    <?= Loc::getMessage('CATALOG_COMPARE_CLEAR') ?>
+                </span>
             </a>
             <div>
                 <a class="sortbutton<?php echo (!$arResult["DIFFERENT"] ? ' current' : '') ?>" href="<?php echo $arResult['COMPARE_URL_TEMPLATE'].'DIFFERENT=N' ?>" rel="nofollow">
@@ -109,8 +113,8 @@ $isAjax = ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax_action']) 
                         </div>
                     </div>
                 </div>
-                <ul class="slider_navigation compare">
-                    <ul class="slider-direction-nav">
+                <ul class="slider_navigation compare intec-ui-mod-simple">
+                    <ul class="slider-direction-nav intec-ui-mod-simple">
                         <li class="slider-nav-prev backward">
                             <span class="slider-prev far fa-angle-left"></span>
                         </li>
@@ -122,14 +126,14 @@ $isAjax = ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax_action']) 
             </div>
         <?php } ?>
         <div class="bx_filtren_container">
-            <ul>
+            <ul class="intec-ui-mod-simple">
                 <?php foreach ($arResult["SHOW_PROPERTIES"] as $key => $arProp) { ?>
-                    <li class="intec-button intec-button-s-6 intec-button-r-3 intec-button-cl-common intec-button-transparent property" data-id-prop="<?=$arProp['ID']?>">
+                    <li class="property intec-ui intec-ui-control-button intec-ui-mod-transparent intec-ui-mod-round-3 intec-ui-scheme-current intec-ui-size-2" data-id-prop="<?=$arProp['ID']?>">
                         + <?= $arProp['NAME'] ?>
                     </li>
                 <?php } ?>
                 <?php foreach ($arResult["SHOW_OFFER_PROPERTIES"] as $key => $arProp) { ?>
-                    <li class="intec-button intec-button-s-6 intec-button-r-3 intec-button-cl-common intec-button-transparent property" data-id-prop="<?=$arProp['ID']?>">
+                    <li class="property intec-ui intec-ui-control-button intec-ui-mod-transparent intec-ui-mod-round-3 intec-ui-scheme-current intec-ui-size-2" data-id-prop="<?=$arProp['ID']?>">
                         + <?= $arProp['NAME'] ?>
                     </li>
                 <?php } ?>
